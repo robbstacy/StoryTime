@@ -20,14 +20,33 @@ Real recordings and cloned audio share the same playback pipeline, so recording 
 - 👨‍👩‍👧 **Voice profiles** — any loved one can record; each profile keeps its own set of recordings.
 - 📱 **Local-first** — all audio stays on the device. Cloud sync and remote sharing are planned, cloning is opt-in-by-design.
 
-## Getting started
+## Getting started (Android Studio)
+
+StoryTime is a React Native app with a **committed native Android project** in `android/` — a standard Gradle project. No Expo Go involved.
+
+**One-time setup:** install [Android Studio](https://developer.android.com/studio) (bundles the Android SDK and JDK) and run `npm install` in the repo root.
+
+**Run the app:**
+
+1. Open the `android/` folder in Android Studio (File → Open).
+2. Let Gradle sync, then create an emulator (Device Manager) or plug in your phone with USB debugging on.
+3. In a terminal at the repo root, start the JavaScript dev server: `npx expo start` (this is just Metro, React Native's bundler — it runs locally, nothing goes through Expo's servers).
+4. Press **Run ▶** in Android Studio.
+
+Or do steps 1–4 in one command from the repo root:
 
 ```bash
-npm install
-npx expo start
+npx expo run:android
 ```
 
-Then open the app in [Expo Go](https://expo.dev/go) on a phone (recording needs a real microphone — the iOS simulator works too). Useful scripts:
+**Build a standalone APK** (installable anywhere, no dev server):
+
+```bash
+cd android && ./gradlew assembleRelease
+# → android/app/build/outputs/apk/release/app-release.apk
+```
+
+Other useful scripts:
 
 ```bash
 npm run typecheck   # TypeScript check

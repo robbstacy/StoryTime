@@ -38,6 +38,5 @@ yarn-error.*
 
 example
 
-# generated native folders
+# iOS native project is still generated on demand (npx expo prebuild -p ios)
 /ios
-/android
