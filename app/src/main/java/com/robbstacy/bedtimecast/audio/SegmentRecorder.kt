@@ -34,6 +34,9 @@ class SegmentRecorder(private val context: Context) {
         isRecording = true
     }
 
+    /** Peak amplitude since the last call (0..32767); powers the level meter. */
+    fun maxAmplitude(): Int = runCatching { recorder?.maxAmplitude ?: 0 }.getOrDefault(0)
+
     fun stop() {
         recorder?.let { r ->
             runCatching { r.stop() }

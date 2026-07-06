@@ -12,9 +12,10 @@ captures/
 # Kotlin
 .kotlin/
 
-# Signing
+# Signing (the shared sideload key is intentionally committed)
 *.jks
 *.keystore
+!signing/shared-debug.keystore
 
 # OS
 .DS_Store

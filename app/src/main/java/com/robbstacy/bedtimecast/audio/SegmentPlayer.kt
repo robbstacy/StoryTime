@@ -22,6 +22,11 @@ class SegmentPlayer {
         player?.takeIf { it.isPlaying }?.pause()
     }
 
+    /** 0.0–1.0; used by the sleep timer's gentle fade-out. */
+    fun setVolume(volume: Float) {
+        player?.setVolume(volume, volume)
+    }
+
     fun resume() {
         player?.takeIf { !it.isPlaying }?.start()
     }

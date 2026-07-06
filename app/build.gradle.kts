@@ -17,9 +17,25 @@ android {
         versionName = "1.0"
     }
 
+    signingConfigs {
+        // Stable sideload key committed to the repo so every CI build has the
+        // same signature and installs over previous builds. Debug-tier key —
+        // replace with a secret-managed release key before any store release.
+        create("shared") {
+            storeFile = rootProject.file("signing/shared-debug.keystore")
+            storePassword = "bedtimecast"
+            keyAlias = "bedtimecast"
+            keyPassword = "bedtimecast"
+        }
+    }
+
     buildTypes {
+        debug {
+            signingConfig = signingConfigs.getByName("shared")
+        }
         release {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("shared")
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
