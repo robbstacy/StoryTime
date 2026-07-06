@@ -1,0 +1,78 @@
+{
+  "id": "the-bremen-town-musicians",
+  "title": "The Bremen Town Musicians",
+  "author": "Brothers Grimm",
+  "year": 1819,
+  "source": "Public domain. Retold from the Brothers Grimm.",
+  "coverEmoji": "🎶",
+  "coverColor": "#C98C5A",
+  "minutes": 6,
+  "characters": [
+    { "id": "donkey", "name": "The Donkey", "emoji": "🫏", "voiceHint": "a big, slow, friendly hee-haw voice" },
+    { "id": "dog", "name": "The Dog", "emoji": "🐕", "voiceHint": "a rough, woofy old voice" },
+    { "id": "cat", "name": "The Cat", "emoji": "🐈", "voiceHint": "a smooth, purring voice" },
+    { "id": "rooster", "name": "The Rooster", "emoji": "🐓", "voiceHint": "a loud, crowing voice" },
+    { "id": "robber", "name": "The Robber", "emoji": "🥷", "voiceHint": "a shaky, frightened whisper" }
+  ],
+  "pages": [
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "Once upon a time, there was a donkey who had carried sacks to the mill for many long years. When he grew too old to work, he decided to run away to the town of Bremen." },
+        { "speaker": "donkey", "text": "\"I shall become a musician!\"" },
+        { "speaker": "narrator", "text": "he said, and off he trotted down the road." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "Before long, he met an old hunting dog lying by the road, panting sadly." },
+        { "speaker": "dog", "text": "\"I am too old to hunt, and no one wants me anymore.\"" },
+        { "speaker": "donkey", "text": "\"Come with me to Bremen! You can bang the drum, and I will play the lute.\"" },
+        { "speaker": "narrator", "text": "The dog wagged his tail, and away they went together." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "Soon they came upon a cat sitting in the road with a face as gloomy as three rainy days." },
+        { "speaker": "cat", "text": "\"I am too old to catch mice, so no one will feed me.\"" },
+        { "speaker": "donkey", "text": "\"Come with us to Bremen! You know a fine tune or two. We shall all be musicians!\"" },
+        { "speaker": "narrator", "text": "So the cat joined them, and on they went." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "At a farmyard gate they found a rooster crowing with all his might." },
+        { "speaker": "rooster", "text": "\"Cock-a-doodle-doo! They mean to put me in the soup on Sunday!\"" },
+        { "speaker": "donkey", "text": "\"Better to come with us to Bremen! You have a mighty voice — together we shall make music like no one has ever heard.\"" },
+        { "speaker": "narrator", "text": "The rooster flapped up onto the donkey's back, and the four friends set off." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "But Bremen was far away, and night fell while they were still deep in the forest. Then the rooster, from high in a tree, spotted a little light in the distance. The friends crept closer and found a cozy cottage — with a band of robbers inside, feasting at a table piled high with good things to eat!" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "The hungry animals put their heads together and made a plan. The donkey stood at the window, the dog climbed on his back, the cat climbed on the dog, and the rooster perched on top. Then, all at once, they made their music: the donkey brayed, the dog barked, the cat meowed, and the rooster crowed — and they crashed right through the window!" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "The robbers leapt up in terror." },
+        { "speaker": "robber", "text": "\"A monster! A terrible monster is coming through the window!\"" },
+        { "speaker": "narrator", "text": "they cried, and they ran out of the cottage and into the dark forest as fast as their legs could carry them. Then the four musicians sat down at the table and ate until their bellies were round and happy." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "Late that night, one robber crept back to take another look. But in the dark, the cat scratched him, the dog nipped his leg, the donkey gave him a mighty kick, and the rooster crowed from the rooftop. The robber flew back to his friends." },
+        { "speaker": "robber", "text": "\"There is a witch in there who scratched me, a man with a knife, a giant with a club, and a judge on the roof shouting 'Bring the rascal here!' Never, ever go back!\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "And the robbers never did. The four musicians liked the little cottage so much that they stayed there together — the donkey, the dog, the cat, and the rooster — making their happy music whenever they pleased. And as far as anyone knows, they are living there still." }
+      ]
+    }
+  ]
+}

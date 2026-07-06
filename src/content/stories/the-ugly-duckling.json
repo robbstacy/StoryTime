@@ -1,0 +1,76 @@
+{
+  "id": "the-ugly-duckling",
+  "title": "The Ugly Duckling",
+  "author": "Hans Christian Andersen",
+  "year": 1843,
+  "source": "Public domain. Retold from Hans Christian Andersen.",
+  "coverEmoji": "🦢",
+  "coverColor": "#A9C5E8",
+  "minutes": 6,
+  "characters": [
+    { "id": "mama-duck", "name": "Mama Duck", "emoji": "🦆", "voiceHint": "a proud, quacky mama voice" },
+    { "id": "ducklings", "name": "The Ducklings", "emoji": "🐥", "voiceHint": "peeping, teasing little voices" },
+    { "id": "duckling", "name": "The Ugly Duckling", "emoji": "🐤", "voiceHint": "a small, sad, hopeful voice" },
+    { "id": "old-duck", "name": "The Old Duck", "emoji": "🪿", "voiceHint": "a snooty, honking voice" },
+    { "id": "swans", "name": "The Swans", "emoji": "🦢", "voiceHint": "graceful, welcoming voices" }
+  ],
+  "pages": [
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "It was summertime, and out in the countryside, beside a quiet pond, a mama duck sat on her nest of eggs. One by one the eggs went crack, crack, crack, and out tumbled a row of fluffy yellow ducklings." },
+        { "speaker": "mama-duck", "text": "\"Quack! What beautiful children I have!\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "But the biggest egg of all had not hatched yet. Mama Duck waited and waited, and at last it cracked open — and out stumbled a duckling quite unlike the others. He was big and grey and clumsy." },
+        { "speaker": "old-duck", "text": "\"Honk! What a strange, ugly duckling THAT one is!\"" },
+        { "speaker": "narrator", "text": "sniffed the old duck from across the pond." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "The other ducklings giggled and splashed." },
+        { "speaker": "ducklings", "text": "\"Peep peep! He's too big! He's too grey! He doesn't look like us at all!\"" },
+        { "speaker": "narrator", "text": "The grey duckling hung his head. Even when he swam faster and dove deeper than anyone, the others only laughed." },
+        { "speaker": "duckling", "text": "\"Perhaps I don't belong here,\"" },
+        { "speaker": "narrator", "text": "he whispered. And one evening, he slipped away across the pond." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "All through the autumn, the little grey duckling wandered alone. The winds grew colder and the leaves came tumbling down. One evening, a flock of great white birds flew overhead, their wings shining in the setting sun. They were the most beautiful creatures he had ever seen." },
+        { "speaker": "duckling", "text": "\"Oh, how I wish I could fly with them,\"" },
+        { "speaker": "narrator", "text": "he sighed. \"But a plain grey bird like me could never belong with birds like those.\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "Winter came, cold and long. The duckling found shelter among the reeds and kept himself safe as the pond froze and the snow fell softly all around. It was a lonely time. But he was braver and stronger than he knew, and little by little, the days began to grow warmer." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "At last it was spring! The ice melted, the trees turned green, and the duckling stretched his wings — and oh! They were wide, and strong, and they lifted him high into the sunny air. Below, on a silver lake, he saw the beautiful white birds gliding like ships. His heart thumped. He flew down to meet them, even if they laughed at him." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "But the great white birds did not laugh. They swam to him in a friendly circle." },
+        { "speaker": "swans", "text": "\"Welcome, welcome! Where have you been all winter, beautiful young swan?\"" },
+        { "speaker": "duckling", "text": "\"Swan? But I am only an ugly grey duckling!\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "Then he looked down into the clear water — and a swan looked back. Snow-white feathers, a graceful neck, wings like sails. He had never been an ugly duckling at all. He had been a little swan all along, just waiting to grow." },
+        { "speaker": "swans", "text": "\"Come and swim with us. You are one of us, and you always were.\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "And the young swan glided across the silver lake with his new family, his heart fuller than it had ever been. Children on the bank pointed and cried, \"Look! The young one is the most beautiful of all!\" And he thought to himself, \"When I was the ugly duckling, I never dreamed of so much happiness.\"" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "id": "tom-sawyer-whitewashes-the-fence",
+  "title": "Tom Sawyer Whitewashes the Fence",
+  "author": "Mark Twain",
+  "year": 1876,
+  "source": "Public domain. Retold from The Adventures of Tom Sawyer by Mark Twain.",
+  "coverEmoji": "🖌️",
+  "coverColor": "#D9B44A",
+  "minutes": 5,
+  "characters": [
+    { "id": "aunt-polly", "name": "Aunt Polly", "emoji": "👒", "voiceHint": "a no-nonsense, loving auntie voice" },
+    { "id": "tom", "name": "Tom Sawyer", "emoji": "😏", "voiceHint": "a sly, easy-going drawl" },
+    { "id": "ben", "name": "Ben Rogers", "emoji": "🍎", "voiceHint": "a boastful boy doing steamboat noises" }
+  ],
+  "pages": [
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "It was a bright Saturday morning in summer, the kind of morning made for adventures. But Tom Sawyer stood on the sidewalk with a bucket of whitewash and a long-handled brush, looking at thirty yards of tall wooden fence." },
+        { "speaker": "aunt-polly", "text": "\"Every board, Tom Sawyer — top to bottom! And no wandering off until it's done!\"" },
+        { "speaker": "narrator", "text": "called Aunt Polly from the porch." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "Tom dipped his brush and passed it along the topmost plank. Then he did it again. Then he compared the tiny whitewashed streak with the great continent of unwhitewashed fence, and sat down discouraged." },
+        { "speaker": "tom", "text": "\"All the boys will come along free as birds, and they'll laugh themselves silly at me painting a fence on a Saturday.\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "And then — right then — Tom had a magnificent idea. Nothing less than a great, splendid inspiration. He took up his brush and went calmly to work, like an artist standing before a masterpiece. Before long, Ben Rogers came skipping down the road, munching an apple and making noises like a steamboat." },
+        { "speaker": "ben", "text": "\"Ding-dong-dong! Chow-ch-chow-wow! SH'T! S'H'T! Stand back there! Steamboat comin' through!\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "Ben pulled up alongside the fence and grinned a wide, apple-flavored grin." },
+        { "speaker": "ben", "text": "\"Hi-yi! You're up a stump, ain't you! Got to WORK, hey? While I'm going swimming. Don't you wish you could come? But of course you'd rather WORK, wouldn't you!\"" },
+        { "speaker": "narrator", "text": "Tom looked at Ben as if he'd said something curious." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "tom", "text": "\"What do you call work?\"" },
+        { "speaker": "ben", "text": "\"Why, ain't THAT work?\"" },
+        { "speaker": "tom", "text": "\"Well, maybe it is, and maybe it ain't. All I know is, it suits Tom Sawyer. Does a boy get a chance to whitewash a fence every day?\"" },
+        { "speaker": "narrator", "text": "That put the thing in a new light. Ben stopped nibbling his apple." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "Tom swept his brush daintily back and forth, stepped back to admire the effect, added a touch here and there, and stepped back again. Ben watched every move, getting more and more interested." },
+        { "speaker": "ben", "text": "\"Say, Tom... let ME whitewash a little.\"" },
+        { "speaker": "tom", "text": "\"No, no. Aunt Polly's awful particular about this fence. It's got to be done just exactly right. I reckon there ain't one boy in a thousand, maybe two thousand, that can do it the way it's got to be done.\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "ben", "text": "\"Oh come on, lemme just try! Only just a little! I'll give you the core of my apple!\"" },
+        { "speaker": "tom", "text": "\"Well... no, Ben. Now don't. I'm afeard—\"" },
+        { "speaker": "ben", "text": "\"I'll give you ALL of it!\"" },
+        { "speaker": "narrator", "text": "Tom gave up the brush with reluctance on his face — and delight in his heart." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "And so it went, all morning long. Boy after boy came along to jeer, and stayed to whitewash. Billy Fisher traded a kite for a turn. Johnny Miller paid with a dead rat and a string to swing it on. By the middle of the afternoon, Tom was rolling in treasures, and the fence had three whole coats of whitewash on it!" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "Aunt Polly came out to see for herself, and her eyes went wide." },
+        { "speaker": "aunt-polly", "text": "\"Well, I never! There's no getting around it — you can work when you've a mind to, Tom Sawyer.\"" },
+        { "speaker": "narrator", "text": "And she picked out the biggest, rosiest apple in the pantry just for him." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "Tom had discovered a great law of human nature, without knowing it: that in order to make somebody want a thing, you need only make the thing hard to get. If he had been a great and wise philosopher, he would now have understood that work is whatever a body is OBLIGED to do, and play is whatever a body is NOT obliged to do. And that is the story of the luckiest fence-painting in the history of Saturday mornings." }
+      ]
+    }
+  ]
+}

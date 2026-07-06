@@ -1,0 +1,67 @@
+{
+  "id": "the-princess-and-the-pea",
+  "title": "The Princess and the Pea",
+  "author": "Hans Christian Andersen",
+  "year": 1835,
+  "source": "Public domain. Retold from Hans Christian Andersen.",
+  "coverEmoji": "🫛",
+  "coverColor": "#C99BC4",
+  "minutes": 4,
+  "characters": [
+    { "id": "prince", "name": "The Prince", "emoji": "🤴", "voiceHint": "a hopeful, sighing voice" },
+    { "id": "queen", "name": "The Old Queen", "emoji": "👑", "voiceHint": "a clever, scheming whisper" },
+    { "id": "princess", "name": "The Princess", "emoji": "👸", "voiceHint": "a polite but very tired voice" },
+    { "id": "king", "name": "The Old King", "emoji": "🫅", "voiceHint": "a jolly, booming voice" }
+  ],
+  "pages": [
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "Once upon a time there was a prince who wished to marry a princess — but she had to be a real princess, through and through. He traveled the whole world over looking for one." },
+        { "speaker": "prince", "text": "\"Princesses are everywhere. But how can I ever be sure one is a REAL princess?\"" },
+        { "speaker": "narrator", "text": "At last he came home again, feeling very sad indeed." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "Then one evening, a terrible storm blew in. Thunder boomed, lightning flashed, and the rain came down in buckets. In the middle of it all, there came a knocking at the palace gate. The old king himself went to open it." },
+        { "speaker": "king", "text": "\"Well, bless my crown! Who would be out on a night like this?\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "There at the gate stood a girl, dripping from head to toe. Water ran from her hair and her clothes, into the toes of her shoes and out again at the heels." },
+        { "speaker": "princess", "text": "\"Good evening. I am terribly sorry to trouble you — but I am a real princess, and I have lost my way in the storm.\"" },
+        { "speaker": "narrator", "text": "A princess? Looking like THAT? The old queen said nothing, but she had her own way of finding out the truth." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "queen", "text": "\"A real princess, is she? We shall soon see about that. I shall put one tiny pea on the bedstead — and pile twenty mattresses on top of it, and twenty feather beds on top of the mattresses. Only a REAL princess could feel a pea through all of that!\"" },
+        { "speaker": "narrator", "text": "whispered the old queen to herself. And that is exactly what she did." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "The princess climbed a tall ladder to the very top of the twenty mattresses and twenty feather beds, said her thank-yous and good-nights, and settled in to sleep. In the morning, the whole family gathered at breakfast." },
+        { "speaker": "king", "text": "\"Well, my dear! And how did you sleep?\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "princess", "text": "\"Oh, terribly, I am sorry to say! I hardly closed my eyes all night. There was something hard in that bed — I am black and blue all over! I simply cannot imagine what it was.\"" },
+        { "speaker": "narrator", "text": "The queen clapped her hands. She had felt the pea through twenty mattresses and twenty feather beds — nobody but a real princess could be so tender." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "prince", "text": "\"A real princess at last!\"" },
+        { "speaker": "narrator", "text": "cried the prince joyfully. And because she was kind and funny as well as real, the prince and princess became true friends first, and then husband and wife, and they were very happy together." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "As for the pea? It was put in a museum, where it may be seen to this very day — if nobody has taken it. And that, you may be sure, is a true story." }
+      ]
+    }
+  ]
+}

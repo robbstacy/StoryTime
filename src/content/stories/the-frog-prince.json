@@ -1,0 +1,77 @@
+{
+  "id": "the-frog-prince",
+  "title": "The Frog Prince",
+  "author": "Brothers Grimm",
+  "year": 1812,
+  "source": "Public domain. Retold from the Brothers Grimm.",
+  "coverEmoji": "🐸",
+  "coverColor": "#5FA777",
+  "minutes": 5,
+  "characters": [
+    { "id": "princess", "name": "The Princess", "emoji": "👸", "voiceHint": "a proper, dramatic voice" },
+    { "id": "frog", "name": "The Frog", "emoji": "🐸", "voiceHint": "a deep, croaky ribbit voice" },
+    { "id": "king", "name": "The King", "emoji": "🤴", "voiceHint": "a firm but fair royal voice" },
+    { "id": "prince", "name": "The Prince", "emoji": "🫅", "voiceHint": "a bright, grateful voice" }
+  ],
+  "pages": [
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "Once upon a time, there was a princess who loved to play with a golden ball. Every day she tossed it high in the air beside the cool well in the palace garden. But one day the ball slipped through her fingers — plop! — straight down into the deep, dark well." },
+        { "speaker": "princess", "text": "\"Oh no! My golden ball! I would give anything to have it back!\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "Just then, a big green frog poked his head out of the water." },
+        { "speaker": "frog", "text": "\"Anything, princess? I do not want your pearls or your crown. But if you will let me eat from your plate, and sleep on your pillow, and be your friend — then I shall dive down and fetch your golden ball.\"" },
+        { "speaker": "princess", "text": "\"Yes, yes, I promise!\"" },
+        { "speaker": "narrator", "text": "said the princess. But secretly she thought a frog could never climb out of the well to follow her." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "The frog dove deep, deep down and came up with the golden ball in his mouth. The princess snatched it up with delight — and ran straight back to the palace, quite forgetting her promise." },
+        { "speaker": "frog", "text": "\"Wait! Princess, wait for me!\"" },
+        { "speaker": "narrator", "text": "croaked the frog. But she was already gone." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "That evening, as the royal family sat at dinner, there came a curious sound at the door — splish, splash, splish, splash — and then a little knock." },
+        { "speaker": "frog", "text": "\"Princess, princess, open the door! Remember the promise you made by the well!\"" },
+        { "speaker": "narrator", "text": "The princess turned quite pale." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "The king asked what was the matter, and the princess told him everything." },
+        { "speaker": "king", "text": "\"My dear, a promise is a promise. If you gave your word, you must keep it. Go and let your friend in.\"" },
+        { "speaker": "narrator", "text": "So the princess opened the door, and the frog hopped in — splish, splash — right up to the table." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "frog", "text": "\"Lift me up beside you, and push your golden plate a little closer, so we may eat together.\"" },
+        { "speaker": "narrator", "text": "The princess wrinkled her nose, but her father gave her a look, and she did as she was asked. And to her great surprise, sharing her dinner with the polite little frog was not so terrible after all." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "When dinner was done, the frog yawned a wide froggy yawn." },
+        { "speaker": "frog", "text": "\"I am tired now. Please carry me upstairs and set me on your pillow.\"" },
+        { "speaker": "narrator", "text": "The princess did not want to at all. But she remembered her promise, and this time she kept it kindly, carrying the frog gently up the stairs and setting him softly on her pillow." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "And the moment she was kind to him with her whole heart — POOF! The frog vanished, and in his place stood a young prince with friendly eyes. A jealous witch had turned him into a frog long ago, and only a true friend could break the spell." },
+        { "speaker": "prince", "text": "\"Thank you, princess! You kept your promise, and you set me free.\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "The prince and the princess became the best of friends, and in time, when they were grown, they were married. And ever after, the princess kept every promise she made — even the ones she made to frogs." }
+      ]
+    }
+  ]
+}

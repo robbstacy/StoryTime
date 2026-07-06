@@ -1,0 +1,69 @@
+{
+  "id": "the-elves-and-the-shoemaker",
+  "title": "The Elves and the Shoemaker",
+  "author": "Brothers Grimm",
+  "year": 1812,
+  "source": "Public domain. Retold from the Brothers Grimm.",
+  "coverEmoji": "👞",
+  "coverColor": "#8D7B68",
+  "minutes": 5,
+  "characters": [
+    { "id": "shoemaker", "name": "The Shoemaker", "emoji": "👴", "voiceHint": "a tired but kind old voice" },
+    { "id": "wife", "name": "The Shoemaker's Wife", "emoji": "👵", "voiceHint": "a warm, wondering voice" },
+    { "id": "customer", "name": "The Customer", "emoji": "🎩", "voiceHint": "a fancy, delighted voice" },
+    { "id": "elves", "name": "The Elves", "emoji": "🧝", "voiceHint": "tiny, giggly singing voices" }
+  ],
+  "pages": [
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "Once upon a time there lived a shoemaker who was honest and kind, but very poor. At last he had only enough leather left for one single pair of shoes." },
+        { "speaker": "shoemaker", "text": "\"I will cut the leather tonight,\"" },
+        { "speaker": "narrator", "text": "he said to his wife," },
+        { "speaker": "shoemaker", "text": "\"and sew the shoes in the morning.\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "But when the shoemaker came down to his workbench the next morning, he could hardly believe his eyes. There stood the shoes — already made! Every stitch was tiny and perfect. He turned them over and over in his hands." },
+        { "speaker": "shoemaker", "text": "\"Who in the world could have done such beautiful work?\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "That very day, a customer came into the shop. He tried on the shoes, and they fit as if they had been made just for him." },
+        { "speaker": "customer", "text": "\"These are the finest shoes I have ever worn! I shall pay you double!\"" },
+        { "speaker": "narrator", "text": "And with that money, the shoemaker bought leather for two pairs of shoes." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "Night after night it was the same. The shoemaker cut the leather in the evening, and in the morning — perfect shoes! Customers came from all over town, and little by little, the shoemaker and his wife were poor no more." },
+        { "speaker": "wife", "text": "\"But who is helping us? We simply must find out. Let us hide behind the curtain tonight and watch!\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "So that night they left a candle burning and hid behind the curtain. When the clock struck twelve, in came two tiny elves with bare feet and raggedy clothes. They hopped up onto the workbench and set to work — snipping, stitching, tap-tap-tapping — singing as they went," },
+        { "speaker": "elves", "text": "\"Stitch and sew, tap-tap-tap, shoes are done before a nap!\"" },
+        { "speaker": "narrator", "text": "And before the candle burned low, every shoe was finished, and the little elves scampered away." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "wife", "text": "\"The poor little things — their clothes are all rags, and their feet are bare! I shall sew them little shirts and coats and trousers, and knit them each a pair of warm socks.\"" },
+        { "speaker": "shoemaker", "text": "\"And I shall make them each a tiny pair of shoes — the finest I have ever made!\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "On Christmas Eve, instead of leather, they laid the little clothes and tiny shoes out on the workbench, and hid behind the curtain to watch. At midnight the elves came skipping in, ready to work — and then they saw the presents. They clapped their little hands with joy, dressed themselves from cap to shoe, and danced around the workbench singing," },
+        { "speaker": "elves", "text": "\"Now we're boys so fine to see, cobblers we no more will be!\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "Then they danced out the door and were never seen again. But it did not matter one bit. The shoemaker's own hands had grown skillful and sure, and his shop was famous. And the shoemaker and his wife lived happily and comfortably for all the rest of their days." }
+      ]
+    }
+  ]
+}
