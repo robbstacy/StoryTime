@@ -45,9 +45,9 @@ Parents don't read in one voice — they growl the Wolf, squeak the pigs, and so
 
 ## Architecture
 
-- **Platform:** React Native + Expo (expo-router, expo-audio, expo-file-system).
+- **Platform:** Native Android — Kotlin + Jetpack Compose (MediaRecorder/MediaPlayer for audio, SharedPreferences for profiles, stories bundled as JSON assets). The earlier React Native/Expo implementation lives on the `react-native-version` branch.
 - **Stories:** structured JSON — `{ id, title, author, year, source, pages: [{ text }] }`. This single decision enables the teleprompter, per-page audio slots, blending, read-along highlighting, and future TTS input.
-- **Recordings:** `documents/recordings/<profileId>/<storyId>/page-<n>.m4a`. Existence of the file *is* the manifest for v1; a richer manifest (durations, cloned URIs, timings) comes with sync/cloning.
+- **Recordings:** `filesDir/recordings/<profileId>/<storyId>/p<page>-s<segment>.m4a`. Existence of the file *is* the manifest for v1; a richer manifest (durations, cloned URIs, timings) comes with sync/cloning.
 - **Profiles:** AsyncStorage. Cloud accounts arrive with sync in v2.
 - **Cloning (v1.5, undecided):** hosted API (ElevenLabs — best quality, fastest, per-use cost, voice data on their servers) vs. self-hosted open models (XTTS/Fish Speech — data stays ours, GPU infra to run). Decision deferred until real recorded samples exist to evaluate quality with.
 
