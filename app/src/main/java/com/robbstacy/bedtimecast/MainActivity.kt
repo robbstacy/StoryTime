@@ -11,6 +11,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.robbstacy.bedtimecast.data.AppPrefs
 import com.robbstacy.bedtimecast.data.ProfilesStore
+import com.robbstacy.bedtimecast.data.ReaderCast
 import com.robbstacy.bedtimecast.data.VoiceModels
 import com.robbstacy.bedtimecast.ui.CastScreen
 import com.robbstacy.bedtimecast.ui.LibraryScreen
@@ -25,6 +26,7 @@ class MainActivity : ComponentActivity() {
         ProfilesStore.init(this)
         AppPrefs.init(this)
         VoiceModels.init(this)
+        ReaderCast.init(this)
         setContent {
             BedtimeCastTheme {
                 AppNavHost()

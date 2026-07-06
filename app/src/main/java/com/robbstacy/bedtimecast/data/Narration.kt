@@ -70,6 +70,57 @@ object Narration {
             }
         }
 
+    /** A segment's narration resolved across ALL profiles (duet-aware). */
+    data class Resolved(val kind: Kind, val file: File?, val readerId: String?)
+
+    /**
+     * Best narration for a segment considering every reader: the assigned
+     * reader's recording first, then the active profile's, then anyone
+     * else's; cloned audio in the same order; else nothing.
+     */
+    fun resolveSegment(context: Context, story: Story, page: Int, segment: Int): Resolved {
+        val speaker = story.pages[page].segments[segment].speaker
+        val profiles = ProfilesStore.profiles
+        val assigned = ReaderCast.reader(story.id, speaker)
+            ?.let { id -> profiles.firstOrNull { it.id == id } }
+        val active = ProfilesStore.activeProfile
+        val order = buildList {
+            assigned?.let { add(it) }
+            active?.takeIf { it.id != assigned?.id }?.let { add(it) }
+            profiles.forEach { p ->
+                if (p.id != assigned?.id && p.id != active?.id) add(p)
+            }
+        }
+        for (profile in order) {
+            val file = segmentFile(context, profile.id, story.id, page, segment)
+            if (file.exists()) return Resolved(Kind.RECORDED, file, profile.id)
+        }
+        for (profile in order) {
+            val file = clonedFile(context, profile.id, story.id, page, segment)
+            if (file.exists()) return Resolved(Kind.CLONED, file, profile.id)
+        }
+        return Resolved(Kind.NONE, null, null)
+    }
+
+    fun resolveMatrix(context: Context, story: Story): List<List<Resolved>> =
+        story.pages.mapIndexed { pageIndex, page ->
+            page.segments.indices.map { segIndex ->
+                resolveSegment(context, story, pageIndex, segIndex)
+            }
+        }
+
+    data class ResolvedSummary(val recorded: Int, val playable: Int, val total: Int, val readerIds: Set<String>)
+
+    fun summarizeResolved(context: Context, story: Story): ResolvedSummary {
+        val flat = resolveMatrix(context, story).flatten()
+        return ResolvedSummary(
+            recorded = flat.count { it.kind == Kind.RECORDED },
+            playable = flat.count { it.file != null },
+            total = flat.size,
+            readerIds = flat.mapNotNull { it.readerId }.toSet(),
+        )
+    }
+
     data class SampleStats(val lines: Int, val words: Int)
 
     /** Recorded narrator material across the whole library for one profile. */

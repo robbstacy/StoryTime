@@ -90,7 +90,8 @@ object CloneEngine {
         val targets = mutableListOf<Target>()
         story.pages.forEachIndexed { pageIndex, page ->
             page.segments.forEachIndexed { segIndex, segment ->
-                val current = Narration.segmentNarration(context, profile.id, story.id, pageIndex, segIndex)
+                // Duet-aware: only lines no reader has covered need generating.
+                val current = Narration.resolveSegment(context, story, pageIndex, segIndex)
                 if (current.kind == Narration.Kind.NONE) {
                     targets.add(Target(pageIndex, segIndex, segment.speaker, segment.text))
                 }
@@ -100,10 +101,13 @@ object CloneEngine {
 
         var done = 0
         for (target in targets) {
+            // Prefer the assigned reader's voice models, else the active profile's.
+            val reader = ProfilesStore.byId(ReaderCast.reader(story.id, target.speaker)) ?: profile
             val model = if (target.speaker == "narrator") {
-                VoiceModels.narrator(profile.id)
+                VoiceModels.narrator(reader.id) ?: VoiceModels.narrator(profile.id)
             } else {
-                VoiceModels.resolve(profile.id, story.id, target.speaker)
+                VoiceModels.resolve(reader.id, story.id, target.speaker)
+                    ?: VoiceModels.resolve(profile.id, story.id, target.speaker)
             } ?: return@withContext Result.failure(
                 IllegalStateException(
                     "Create ${profile.name}'s narrator voice model first (Voice Cast screen).",
@@ -111,7 +115,9 @@ object CloneEngine {
             )
             val audio = ElevenLabs.textToSpeech(apiKey, model.elevenVoiceId, target.text)
                 .getOrElse { return@withContext Result.failure(it) }
-            val dest = Narration.clonedFile(context, profile.id, story.id, target.page, target.segment)
+            val dest = Narration.clonedFile(
+                context, model.profileId, story.id, target.page, target.segment,
+            )
             dest.parentFile?.mkdirs()
             dest.writeBytes(audio)
             done++

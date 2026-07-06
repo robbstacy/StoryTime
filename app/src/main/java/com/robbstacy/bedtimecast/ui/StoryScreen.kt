@@ -72,7 +72,7 @@ fun StoryScreen(nav: NavController, storyId: String, startPage: Int) {
     val scope = rememberCoroutineScope()
 
     var narr by remember {
-        mutableStateOf(Narration.narrationMatrix(context, profile?.id, story))
+        mutableStateOf(Narration.resolveMatrix(context, story))
     }
     var pageIndex by remember {
         mutableIntStateOf(startPage.coerceIn(0, story.pages.size - 1))
@@ -86,6 +86,7 @@ fun StoryScreen(nav: NavController, storyId: String, startPage: Int) {
     var infoMessage by remember { mutableStateOf<String?>(null) }
     var generating by remember { mutableStateOf<String?>(null) }
     var showCasting by remember { mutableStateOf(false) }
+    var showReaders by remember { mutableStateOf(false) }
 
     val player = remember { SegmentPlayer() }
     DisposableEffect(Unit) {
@@ -108,8 +109,10 @@ fun StoryScreen(nav: NavController, storyId: String, startPage: Int) {
     val pageNarr = narr[pageIndex]
     val pagePlayable = pageNarr.any { it.file != null }
     val isLastPage = pageIndex >= story.pages.size - 1
-    val anyRecorded = narr.flatten().any { it.kind == Narration.Kind.RECORDED }
     val anyMissing = narr.flatten().any { it.kind == Narration.Kind.NONE }
+    // Story gifts pack the ACTIVE profile's own recordings.
+    val giftable = profile != null &&
+        Narration.recordedMatrix(context, profile.id, story).flatten().any { it }
 
     fun playFrom(p: Int, s: Int) {
         val file = narr[p][s].file
@@ -193,8 +196,8 @@ fun StoryScreen(nav: NavController, storyId: String, startPage: Int) {
             generating = null
             result.fold(
                 onSuccess = { count ->
-                    narr = Narration.narrationMatrix(context, prof.id, story)
-                    infoMessage = "✨ Generated $count lines in ${prof.name}'s voice."
+                    narr = Narration.resolveMatrix(context, story)
+                    infoMessage = "✨ Generated $count lines."
                 },
                 onFailure = { infoMessage = it.message ?: "Generation failed." },
             )
@@ -208,6 +211,54 @@ fun StoryScreen(nav: NavController, storyId: String, startPage: Int) {
             text = { Text(message) },
             confirmButton = {
                 TextButton(onClick = { infoMessage = null }) { Text("OK") }
+            },
+        )
+    }
+
+    if (showReaders) {
+        AlertDialog(
+            onDismissRequest = { showReaders = false },
+            title = { Text("👥 Who reads what?") },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Text(
+                        "Tap a role to choose its reader — perfect for stories read together. " +
+                            "Auto plays whoever recorded each line.",
+                        fontSize = 13.sp,
+                    )
+                    val roles = listOf("narrator" to "📖 Narrator") +
+                        story.characters.map { it.id to "${it.emoji} ${it.name}" }
+                    roles.forEach { (speakerId, label) ->
+                        val assignedId = com.robbstacy.bedtimecast.data.ReaderCast
+                            .reader(story.id, speakerId)
+                        val options = listOf<String?>(null) + ProfilesStore.profiles.map { it.id }
+                        val currentLabel = ProfilesStore.byId(assignedId)
+                            ?.let { "${it.emoji} ${it.name}" } ?: "Auto"
+                        Surface(
+                            shape = RoundedCornerShape(12.dp),
+                            color = MaterialTheme.colorScheme.surfaceVariant,
+                            modifier = Modifier.fillMaxWidth().clickable {
+                                val index = options.indexOf(assignedId)
+                                val next = options[(index + 1) % options.size]
+                                com.robbstacy.bedtimecast.data.ReaderCast
+                                    .assign(story.id, speakerId, next)
+                                narr = Narration.resolveMatrix(context, story)
+                            },
+                        ) {
+                            Column(Modifier.padding(horizontal = 12.dp, vertical = 8.dp)) {
+                                Text(label, fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
+                                Text(
+                                    "→ $currentLabel",
+                                    fontSize = 13.sp,
+                                    color = MaterialTheme.colorScheme.primary,
+                                )
+                            }
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { showReaders = false }) { Text("Done") }
             },
         )
     }
@@ -274,6 +325,11 @@ fun StoryScreen(nav: NavController, storyId: String, startPage: Int) {
         ?.let { story.character(it.speaker) }
     val firstMissing = pageNarr.indexOfFirst { it.file == null }
     val hasModels = profile != null && VoiceModels.modelsFor(profile.id).isNotEmpty()
+    val currentReaderName = ProfilesStore.byId(currentNarration?.readerId)?.name
+        ?: profile?.name.orEmpty()
+    val pageReaders = pageNarr.mapNotNull { ProfilesStore.byId(it.readerId)?.name }
+        .distinct()
+        .joinToString(" & ")
 
     Scaffold(
         containerColor = bgColor,
@@ -284,12 +340,17 @@ fun StoryScreen(nav: NavController, storyId: String, startPage: Int) {
                 containerColor = bgColor,
                 titleColor = mainText,
                 actions = {
+                    if (!AppPrefs.kidMode && ProfilesStore.profiles.size > 1) {
+                        TextButton(onClick = { showReaders = true }) {
+                            Text("👥", fontSize = 18.sp)
+                        }
+                    }
                     if (!AppPrefs.kidMode && hasModels) {
                         TextButton(onClick = { showCasting = true }) {
                             Text("🎭", fontSize = 18.sp)
                         }
                     }
-                    if (!AppPrefs.kidMode && anyRecorded) {
+                    if (!AppPrefs.kidMode && giftable) {
                         TextButton(onClick = { shareStoryGift() }) {
                             Text("🎁", fontSize = 18.sp)
                         }
@@ -315,20 +376,21 @@ fun StoryScreen(nav: NavController, storyId: String, startPage: Int) {
             val badgeText: String
             val badgeColor: Color
             when {
-                activelyPlaying && currentNarration?.kind == Narration.Kind.CLONED && profile != null -> {
+                activelyPlaying && currentNarration?.kind == Narration.Kind.CLONED -> {
                     badgeText = if (currentCharacter != null) {
-                        "✨ ${currentCharacter.emoji} ${profile.name}'s ${currentCharacter.name} (AI)"
+                        "✨ ${currentCharacter.emoji} $currentReaderName's ${currentCharacter.name} (AI)"
                     } else {
-                        "✨ ${profile.name}'s voice (AI)"
+                        "✨ $currentReaderName's voice (AI)"
                     }
                     badgeColor = if (bedtime) NIGHT_DIM else AppColors.gold
                 }
-                activelyPlaying && currentCharacter != null && profile != null -> {
-                    badgeText = "${currentCharacter.emoji} ${profile.name}'s ${currentCharacter.name}"
+                activelyPlaying && currentCharacter != null -> {
+                    badgeText = "${currentCharacter.emoji} $currentReaderName's ${currentCharacter.name}"
                     badgeColor = if (bedtime) NIGHT_TEXT else characterColor(story, currentCharacter.id)
                 }
-                pageNarr.isNotEmpty() && pageNarr.all { it.kind == Narration.Kind.RECORDED } && profile != null -> {
-                    badgeText = "❤️ Read by ${profile.name}"
+                pageNarr.isNotEmpty() && pageNarr.all { it.kind == Narration.Kind.RECORDED } &&
+                    pageReaders.isNotEmpty() -> {
+                    badgeText = "❤️ Read by $pageReaders"
                     badgeColor = if (bedtime) NIGHT_DIM else AppColors.recorded
                 }
                 pagePlayable -> {

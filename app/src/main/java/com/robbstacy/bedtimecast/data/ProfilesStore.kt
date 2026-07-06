@@ -27,6 +27,8 @@ object ProfilesStore {
     val activeProfile: VoiceProfile?
         get() = profiles.find { it.id == activeProfileId }
 
+    fun byId(id: String?): VoiceProfile? = id?.let { profiles.find { p -> p.id == it } }
+
     @Serializable
     private data class Persisted(val profiles: List<VoiceProfile>, val activeProfileId: String?)
 

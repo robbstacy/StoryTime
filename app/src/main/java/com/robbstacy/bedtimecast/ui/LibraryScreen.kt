@@ -231,18 +231,24 @@ fun LibraryScreen(nav: NavController) {
 @Composable
 private fun StoryCard(story: Story, nav: NavController) {
     val context = LocalContext.current
-    val profile = ProfilesStore.activeProfile
-    val summary = Narration.summarize(context, profile?.id, story)
+    val summary = Narration.summarizeResolved(context, story)
     val favorite = AppPrefs.isFavorite(story.id)
+    val readerNames = summary.readerIds
+        .mapNotNull { ProfilesStore.byId(it)?.name }
+        .joinToString(" & ")
 
     val statusText: String
     val statusColor: androidx.compose.ui.graphics.Color
     when {
-        summary.complete && profile != null -> {
-            statusText = "❤️ Read by ${profile.name}"
+        summary.total > 0 && summary.recorded == summary.total && readerNames.isNotEmpty() -> {
+            statusText = "❤️ Read by $readerNames"
             statusColor = AppColors.recorded
         }
-        !summary.none -> {
+        summary.total > 0 && summary.playable == summary.total && readerNames.isNotEmpty() -> {
+            statusText = "❤️✨ Ready to play — $readerNames"
+            statusColor = AppColors.gold
+        }
+        summary.playable > 0 -> {
             statusText = "${summary.recorded} of ${summary.total} lines recorded"
             statusColor = MaterialTheme.colorScheme.primary
         }
