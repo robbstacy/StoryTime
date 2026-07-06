@@ -71,7 +71,7 @@ fun LibraryScreen(nav: NavController) {
             confirmButton = {
                 TextButton(onClick = {
                     showKidModeConfirm = false
-                    AppPrefs.setKidMode(true)
+                    AppPrefs.updateKidMode(true)
                 }) { Text("Turn on kid mode") }
             },
             dismissButton = {
@@ -98,7 +98,7 @@ fun LibraryScreen(nav: NavController) {
                 TextButton(onClick = {
                     if (gateAnswer.trim().toIntOrNull() == gateA + gateB) {
                         showGate = false
-                        AppPrefs.setKidMode(false)
+                        AppPrefs.updateKidMode(false)
                     } else {
                         gateAnswer = ""
                     }

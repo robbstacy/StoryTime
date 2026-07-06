@@ -40,7 +40,7 @@ object AppPrefs {
         }
     }
 
-    fun setKidMode(on: Boolean) {
+    fun updateKidMode(on: Boolean) {
         kidMode = on
         prefs.edit().putBoolean("kidMode", on).apply()
     }
