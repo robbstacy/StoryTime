@@ -68,6 +68,19 @@ object ProfilesStore {
         persist()
     }
 
+    /** Merge profiles restored from a backup; existing profiles are kept. */
+    fun mergeFrom(imported: List<VoiceProfile>, importedActiveId: String?) {
+        for (profile in imported) {
+            if (profiles.none { it.id == profile.id }) {
+                profiles.add(profile)
+            }
+        }
+        if (activeProfileId == null) {
+            activeProfileId = importedActiveId ?: profiles.firstOrNull()?.id
+        }
+        persist()
+    }
+
     private fun persist() {
         prefs.edit()
             .putString(KEY, json.encodeToString(Persisted(profiles.toList(), activeProfileId)))

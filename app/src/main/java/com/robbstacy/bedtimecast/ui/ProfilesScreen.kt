@@ -1,5 +1,7 @@
 package com.robbstacy.bedtimecast.ui
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -24,10 +26,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,17 +40,67 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.robbstacy.bedtimecast.data.Backup
 import com.robbstacy.bedtimecast.data.ProfilesStore
 import com.robbstacy.bedtimecast.data.VoiceProfile
 import com.robbstacy.bedtimecast.ui.theme.AppColors
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 private val EMOJI_CHOICES = listOf("👩", "👨", "👵", "👴", "🧑", "🦸")
 
 @Composable
 fun ProfilesScreen(nav: NavController) {
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val scope = rememberCoroutineScope()
     var name by remember { mutableStateOf("") }
     var emoji by remember { mutableStateOf(EMOJI_CHOICES[0]) }
     var removeTarget by remember { mutableStateOf<VoiceProfile?>(null) }
+    var backupMessage by remember { mutableStateOf<String?>(null) }
+    var backupBusy by remember { mutableStateOf(false) }
+
+    val exportLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.CreateDocument("application/zip"),
+    ) { uri ->
+        if (uri != null) {
+            backupBusy = true
+            scope.launch {
+                val result = withContext(Dispatchers.IO) { Backup.export(context, uri) }
+                backupBusy = false
+                backupMessage = result.fold(
+                    onSuccess = { "Backup saved ✅\n${it.profiles} voices, ${it.recordings} recordings." },
+                    onFailure = { "Backup failed: ${it.message}" },
+                )
+            }
+        }
+    }
+    val importLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.OpenDocument(),
+    ) { uri ->
+        if (uri != null) {
+            backupBusy = true
+            scope.launch {
+                val result = withContext(Dispatchers.IO) { Backup.import(context, uri) }
+                backupBusy = false
+                backupMessage = result.fold(
+                    onSuccess = { "Backup restored ✅\n${it.profiles} voices, ${it.recordings} recordings." },
+                    onFailure = { "Restore failed: ${it.message}" },
+                )
+            }
+        }
+    }
+
+    backupMessage?.let { message ->
+        AlertDialog(
+            onDismissRequest = { backupMessage = null },
+            title = { Text(if (message.contains("✅")) "Done" else "Something went wrong") },
+            text = { Text(message) },
+            confirmButton = {
+                TextButton(onClick = { backupMessage = null }) { Text("OK") }
+            },
+        )
+    }
 
     removeTarget?.let { target ->
         AlertDialog(
@@ -205,6 +259,47 @@ fun ProfilesScreen(nav: NavController) {
                         Text("Add", fontWeight = FontWeight.Bold)
                     }
                 }
+            }
+
+            item {
+                Text(
+                    "BACKUP",
+                    modifier = Modifier.padding(top = 16.dp),
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 0.8.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+
+            item {
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    OutlinedButton(
+                        onClick = { exportLauncher.launch(Backup.SUGGESTED_FILE_NAME) },
+                        modifier = Modifier.weight(1f),
+                        enabled = !backupBusy && ProfilesStore.profiles.isNotEmpty(),
+                    ) {
+                        Text("💾 Back up", fontWeight = FontWeight.SemiBold)
+                    }
+                    OutlinedButton(
+                        onClick = { importLauncher.launch(arrayOf("application/zip")) },
+                        modifier = Modifier.weight(1f),
+                        enabled = !backupBusy,
+                    ) {
+                        Text("📥 Restore", fontWeight = FontWeight.SemiBold)
+                    }
+                }
+            }
+
+            item {
+                Text(
+                    if (backupBusy) "Working…"
+                    else "Saves every voice and all recordings into one .zip file — keep it in " +
+                        "Downloads or Google Drive, and restore it on any phone.",
+                    fontSize = 12.sp,
+                    lineHeight = 18.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
             }
 
             item {
