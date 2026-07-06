@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.robbstacy.bedtimecast.data.AppPrefs
 import com.robbstacy.bedtimecast.data.ProfilesStore
 import com.robbstacy.bedtimecast.ui.CastScreen
 import com.robbstacy.bedtimecast.ui.LibraryScreen
@@ -21,6 +22,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         ProfilesStore.init(this)
+        AppPrefs.init(this)
         setContent {
             BedtimeCastTheme {
                 AppNavHost()
@@ -37,10 +39,17 @@ fun AppNavHost() {
             LibraryScreen(nav)
         }
         composable(
-            route = "story/{storyId}",
-            arguments = listOf(navArgument("storyId") { type = NavType.StringType }),
+            route = "story/{storyId}?page={page}",
+            arguments = listOf(
+                navArgument("storyId") { type = NavType.StringType },
+                navArgument("page") { type = NavType.IntType; defaultValue = 0 },
+            ),
         ) { entry ->
-            StoryScreen(nav, entry.arguments?.getString("storyId").orEmpty())
+            StoryScreen(
+                nav,
+                entry.arguments?.getString("storyId").orEmpty(),
+                entry.arguments?.getInt("page") ?: 0,
+            )
         }
         composable(
             route = "record/{storyId}?page={page}&seg={seg}",

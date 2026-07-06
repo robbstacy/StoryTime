@@ -26,7 +26,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
+import com.robbstacy.bedtimecast.data.AppPrefs
 import com.robbstacy.bedtimecast.data.CastMember
 import com.robbstacy.bedtimecast.data.Narration
 import com.robbstacy.bedtimecast.data.ProfilesStore
@@ -37,6 +39,19 @@ import com.robbstacy.bedtimecast.ui.theme.AppColors
 fun CastScreen(nav: NavController) {
     val context = LocalContext.current
     val profile = ProfilesStore.activeProfile
+
+    if (AppPrefs.kidMode) {
+        Scaffold(topBar = { AppTopBar("Voice Cast", nav) }) { padding ->
+            Box(Modifier.padding(padding).fillMaxSize().padding(24.dp), contentAlignment = Alignment.Center) {
+                Text(
+                    "🔒 The voice cast is for grown-ups. Ask one to unlock kid mode from the library.",
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onBackground,
+                )
+            }
+        }
+        return
+    }
     val cast = Narration.cast(context, profile?.id, StoryRepository.stories(context))
     val performed = cast.filter { it.recordedLines > 0 }
     val waiting = cast.filter { it.recordedLines == 0 }

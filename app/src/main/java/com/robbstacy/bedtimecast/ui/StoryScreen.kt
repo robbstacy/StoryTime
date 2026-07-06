@@ -1,5 +1,6 @@
 package com.robbstacy.bedtimecast.ui
 
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,20 +15,26 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
@@ -37,39 +44,68 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.FileProvider
 import androidx.navigation.NavController
 import com.robbstacy.bedtimecast.audio.SegmentPlayer
+import com.robbstacy.bedtimecast.data.AppPrefs
+import com.robbstacy.bedtimecast.data.Backup
 import com.robbstacy.bedtimecast.data.Narration
 import com.robbstacy.bedtimecast.data.ProfilesStore
 import com.robbstacy.bedtimecast.data.StoryRepository
 import com.robbstacy.bedtimecast.ui.theme.AppColors
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
+private val NIGHT_BG = Color(0xFF12131F)
+private val NIGHT_TEXT = Color(0xFFD8C6A8)
+private val NIGHT_DIM = Color(0xFF8E8574)
 
 @Composable
-fun StoryScreen(nav: NavController, storyId: String) {
+fun StoryScreen(nav: NavController, storyId: String, startPage: Int) {
     val context = LocalContext.current
     val story = StoryRepository.story(context, storyId) ?: return
     val profile = ProfilesStore.activeProfile
+    val scope = rememberCoroutineScope()
 
     var matrix by remember {
         mutableStateOf(Narration.recordedMatrix(context, profile?.id, story))
     }
-    var pageIndex by remember { mutableIntStateOf(0) }
+    var pageIndex by remember {
+        mutableIntStateOf(startPage.coerceIn(0, story.pages.size - 1))
+    }
     var segIndex by remember { mutableIntStateOf(0) }
     var playing by remember { mutableStateOf(false) }
     var paused by remember { mutableStateOf(false) }
+    var bedtime by remember { mutableStateOf(false) }
+    var timerMinutes by remember { mutableStateOf<Int?>(null) }
+    var timerEndAt by remember { mutableStateOf<Long?>(null) }
+    var shareMessage by remember { mutableStateOf<String?>(null) }
 
     val player = remember { SegmentPlayer() }
     DisposableEffect(Unit) {
         onDispose { player.stop() }
     }
 
+    // Remember where this story was left off.
+    LaunchedEffect(pageIndex) {
+        AppPrefs.saveResume(story.id, pageIndex)
+    }
+
+    // Keep the screen on while reading at bedtime or during playback.
+    val view = LocalView.current
+    DisposableEffect(bedtime, playing) {
+        view.keepScreenOn = bedtime || playing
+        onDispose { view.keepScreenOn = false }
+    }
+
     val page = story.pages[pageIndex]
     val pageRecorded = matrix[pageIndex]
     val pagePlayable = pageRecorded.any { it }
     val isLastPage = pageIndex >= story.pages.size - 1
+    val anyRecorded = matrix.flatten().any { it }
 
-    // Plays segment (p, s); on completion chains to the next recorded segment,
-    // turning the page when the current one ends.
     fun playFrom(p: Int, s: Int) {
         val prof = profile ?: return
         val file = Narration.segmentFile(context, prof.id, story.id, p, s)
@@ -99,37 +135,123 @@ fun StoryScreen(nav: NavController, storyId: String) {
         segIndex = 0
     }
 
+    // Sleep timer: when it expires, fade the volume out gently and stop.
+    LaunchedEffect(timerEndAt) {
+        val end = timerEndAt ?: return@LaunchedEffect
+        while (System.currentTimeMillis() < end) {
+            delay(1_000)
+        }
+        for (step in 9 downTo 0) {
+            player.setVolume(step / 10f)
+            delay(500)
+        }
+        player.stop()
+        playing = false
+        paused = false
+        timerEndAt = null
+        timerMinutes = null
+    }
+
+    fun shareStoryGift() {
+        val prof = profile ?: return
+        scope.launch {
+            val result = withContext(Dispatchers.IO) {
+                Backup.exportPack(context, prof.id, story, prof.name, prof.emoji)
+            }
+            result.fold(
+                onSuccess = { file ->
+                    val uri = FileProvider.getUriForFile(
+                        context,
+                        "com.robbstacy.bedtimecast.fileprovider",
+                        file,
+                    )
+                    val send = Intent(Intent.ACTION_SEND).apply {
+                        type = "application/zip"
+                        putExtra(Intent.EXTRA_STREAM, uri)
+                        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    }
+                    context.startActivity(
+                        Intent.createChooser(send, "Send \"${story.title}\" read by ${prof.name}"),
+                    )
+                },
+                onFailure = { shareMessage = it.message ?: "Could not create the story gift." },
+            )
+        }
+    }
+
+    shareMessage?.let { message ->
+        AlertDialog(
+            onDismissRequest = { shareMessage = null },
+            title = { Text("Story gift") },
+            text = { Text(message) },
+            confirmButton = {
+                TextButton(onClick = { shareMessage = null }) { Text("OK") }
+            },
+        )
+    }
+
+    // Bedtime mode swaps the palette for a dim, warm night look.
+    val bgColor = if (bedtime) NIGHT_BG else MaterialTheme.colorScheme.background
+    val mainText = if (bedtime) NIGHT_TEXT else MaterialTheme.colorScheme.onBackground
+    val dimText = if (bedtime) NIGHT_DIM else MaterialTheme.colorScheme.onSurfaceVariant
+
+    val playing2 = playing && !paused
+    val currentSegment = page.segments.getOrNull(segIndex)
+    val currentCharacter = currentSegment
+        ?.takeIf { it.speaker != "narrator" }
+        ?.let { story.character(it.speaker) }
+    val firstMissing = pageRecorded.indexOfFirst { !it }
+
     Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
-        topBar = { AppTopBar(story.title, nav) },
+        containerColor = bgColor,
+        topBar = {
+            AppTopBar(
+                title = story.title,
+                nav = nav,
+                containerColor = bgColor,
+                titleColor = mainText,
+                actions = {
+                    if (!AppPrefs.kidMode && anyRecorded) {
+                        TextButton(onClick = { shareStoryGift() }) {
+                            Text("🎁", fontSize = 18.sp)
+                        }
+                    }
+                    TextButton(onClick = {
+                        bedtime = !bedtime
+                        if (!bedtime) {
+                            timerEndAt = null
+                            timerMinutes = null
+                        }
+                    }) {
+                        Text(if (bedtime) "☀️" else "🌙", fontSize = 18.sp)
+                    }
+                },
+            )
+        },
     ) { padding ->
         Column(
             Modifier.padding(padding).fillMaxSize().padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             // Source badge
-            val currentSegment = page.segments.getOrNull(segIndex)
-            val currentCharacter = currentSegment
-                ?.takeIf { it.speaker != "narrator" }
-                ?.let { story.character(it.speaker) }
             val badgeText: String
-            val badgeColor: androidx.compose.ui.graphics.Color
+            val badgeColor: Color
             when {
-                playing && !paused && currentCharacter != null && profile != null -> {
+                playing2 && currentCharacter != null && profile != null -> {
                     badgeText = "${currentCharacter.emoji} ${profile.name}'s ${currentCharacter.name}"
-                    badgeColor = characterColor(story, currentCharacter.id)
+                    badgeColor = if (bedtime) NIGHT_TEXT else characterColor(story, currentCharacter.id)
                 }
-                pageRecorded.all { it } && profile != null -> {
+                pageRecorded.isNotEmpty() && pageRecorded.all { it } && profile != null -> {
                     badgeText = "❤️ Read by ${profile.name}"
-                    badgeColor = AppColors.recorded
+                    badgeColor = if (bedtime) NIGHT_DIM else AppColors.recorded
                 }
                 pagePlayable -> {
                     badgeText = "Some lines aren't recorded yet"
-                    badgeColor = MaterialTheme.colorScheme.onSurfaceVariant
+                    badgeColor = dimText
                 }
                 else -> {
                     badgeText = "This page isn't recorded yet"
-                    badgeColor = MaterialTheme.colorScheme.onSurfaceVariant
+                    badgeColor = dimText
                 }
             }
             Text(
@@ -141,11 +263,45 @@ fun StoryScreen(nav: NavController, storyId: String) {
                 color = badgeColor,
             )
 
+            // Sleep timer chips (bedtime mode only)
+            if (bedtime) {
+                Row(
+                    Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+                ) {
+                    listOf<Pair<String, Int?>>(
+                        "Timer off" to null,
+                        "15 min" to 15,
+                        "30 min" to 30,
+                    ).forEach { (label, minutes) ->
+                        val selected = timerMinutes == minutes
+                        Surface(
+                            shape = RoundedCornerShape(999.dp),
+                            color = if (selected) NIGHT_DIM.copy(alpha = 0.35f) else Color.Transparent,
+                            modifier = Modifier.clickable {
+                                timerMinutes = minutes
+                                timerEndAt = minutes?.let {
+                                    System.currentTimeMillis() + it * 60_000L
+                                }
+                            },
+                        ) {
+                            Text(
+                                label,
+                                modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp),
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = if (selected) NIGHT_TEXT else NIGHT_DIM,
+                            )
+                        }
+                    }
+                }
+            }
+
             // Page card
             Surface(
                 modifier = Modifier.weight(1f).fillMaxWidth(),
                 shape = RoundedCornerShape(24.dp),
-                color = coverColor(story).copy(alpha = 0.14f),
+                color = coverColor(story).copy(alpha = if (bedtime) 0.08f else 0.14f),
             ) {
                 Column(
                     Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(24.dp),
@@ -156,13 +312,16 @@ fun StoryScreen(nav: NavController, storyId: String) {
                     Text(
                         buildAnnotatedString {
                             page.segments.forEachIndexed { index, segment ->
-                                val isCurrent = playing && index == segIndex
+                                val isCurrent = playing2 && index == segIndex
                                 val isDialogue = segment.speaker != "narrator"
                                 withStyle(
                                     SpanStyle(
-                                        color = if (isDialogue) characterColor(story, segment.speaker)
-                                        else MaterialTheme.colorScheme.onBackground,
-                                        fontWeight = if (isDialogue) FontWeight.SemiBold else null,
+                                        color = when {
+                                            bedtime -> NIGHT_TEXT
+                                            isDialogue -> characterColor(story, segment.speaker)
+                                            else -> MaterialTheme.colorScheme.onBackground
+                                        },
+                                        fontWeight = if (isDialogue && !bedtime) FontWeight.SemiBold else null,
                                         textDecoration = if (isCurrent) TextDecoration.Underline else null,
                                     ),
                                 ) {
@@ -186,10 +345,13 @@ fun StoryScreen(nav: NavController, storyId: String) {
             ) {
                 story.pages.forEachIndexed { index, _ ->
                     val dotColor = when {
-                        index == pageIndex -> MaterialTheme.colorScheme.primary
-                        matrix[index].all { it } && matrix[index].isNotEmpty() -> AppColors.recorded
-                        matrix[index].any { it } -> MaterialTheme.colorScheme.primary.copy(alpha = 0.4f)
-                        else -> AppColors.selected
+                        index == pageIndex -> if (bedtime) NIGHT_TEXT else MaterialTheme.colorScheme.primary
+                        matrix[index].isNotEmpty() && matrix[index].all { it } ->
+                            if (bedtime) NIGHT_DIM else AppColors.recorded
+                        matrix[index].any { it } ->
+                            if (bedtime) NIGHT_DIM.copy(alpha = 0.6f)
+                            else MaterialTheme.colorScheme.primary.copy(alpha = 0.4f)
+                        else -> if (bedtime) NIGHT_DIM.copy(alpha = 0.25f) else AppColors.selected
                     }
                     Box(
                         Modifier
@@ -209,9 +371,7 @@ fun StoryScreen(nav: NavController, storyId: String) {
                 Text(
                     "‹",
                     fontSize = 36.sp,
-                    color = MaterialTheme.colorScheme.onBackground.copy(
-                        alpha = if (pageIndex == 0) 0.3f else 1f,
-                    ),
+                    color = mainText.copy(alpha = if (pageIndex == 0) 0.3f else 1f),
                     modifier = Modifier.clickable(enabled = pageIndex > 0) { goToPage(pageIndex - 1) },
                 )
 
@@ -219,7 +379,10 @@ fun StoryScreen(nav: NavController, storyId: String) {
                     Box(
                         modifier = Modifier
                             .size(76.dp)
-                            .background(MaterialTheme.colorScheme.primary, CircleShape)
+                            .background(
+                                if (bedtime) NIGHT_DIM else MaterialTheme.colorScheme.primary,
+                                CircleShape,
+                            )
                             .clickable {
                                 when {
                                     playing && !paused -> {
@@ -230,18 +393,21 @@ fun StoryScreen(nav: NavController, storyId: String) {
                                         player.resume()
                                         paused = false
                                     }
-                                    else -> playFrom(pageIndex, pageRecorded.indexOfFirst { it }.coerceAtLeast(0))
+                                    else -> playFrom(
+                                        pageIndex,
+                                        if (pageRecorded[0]) 0 else firstMissing.coerceAtLeast(0),
+                                    )
                                 }
                             },
                         contentAlignment = Alignment.Center,
                     ) {
                         Text(
-                            if (playing && !paused) "⏸" else "▶",
+                            if (playing2) "⏸" else "▶",
                             fontSize = 28.sp,
-                            color = MaterialTheme.colorScheme.onPrimary,
+                            color = if (bedtime) NIGHT_BG else MaterialTheme.colorScheme.onPrimary,
                         )
                     }
-                } else {
+                } else if (!AppPrefs.kidMode) {
                     Surface(
                         shape = RoundedCornerShape(999.dp),
                         color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
@@ -256,20 +422,23 @@ fun StoryScreen(nav: NavController, storyId: String) {
                             color = MaterialTheme.colorScheme.primary,
                         )
                     }
+                } else {
+                    Text(
+                        "Ask a grown-up to record this page 😊",
+                        fontSize = 14.sp,
+                        color = dimText,
+                    )
                 }
 
                 Text(
                     "›",
                     fontSize = 36.sp,
-                    color = MaterialTheme.colorScheme.onBackground.copy(
-                        alpha = if (isLastPage) 0.3f else 1f,
-                    ),
+                    color = mainText.copy(alpha = if (isLastPage) 0.3f else 1f),
                     modifier = Modifier.clickable(enabled = !isLastPage) { goToPage(pageIndex + 1) },
                 )
             }
 
-            val firstMissing = pageRecorded.indexOfFirst { !it }
-            if (pagePlayable && firstMissing >= 0) {
+            if (!AppPrefs.kidMode && pagePlayable && firstMissing >= 0) {
                 Text(
                     "🎙 Record the missing lines on this page",
                     modifier = Modifier
@@ -278,7 +447,7 @@ fun StoryScreen(nav: NavController, storyId: String) {
                     textAlign = TextAlign.Center,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.primary,
+                    color = if (bedtime) NIGHT_DIM else MaterialTheme.colorScheme.primary,
                 )
             }
 
@@ -287,7 +456,7 @@ fun StoryScreen(nav: NavController, storyId: String) {
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
                 fontSize = 13.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = dimText,
             )
         }
     }

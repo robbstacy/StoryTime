@@ -39,7 +39,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.layout.Box
+import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
+import com.robbstacy.bedtimecast.data.AppPrefs
 import com.robbstacy.bedtimecast.data.Backup
 import com.robbstacy.bedtimecast.data.ProfilesStore
 import com.robbstacy.bedtimecast.data.VoiceProfile
@@ -52,6 +55,19 @@ private val EMOJI_CHOICES = listOf("👩", "👨", "👵", "👴", "🧑", "🦸
 
 @Composable
 fun ProfilesScreen(nav: NavController) {
+    if (AppPrefs.kidMode) {
+        Scaffold(topBar = { AppTopBar("Voices", nav) }) { padding ->
+            Box(Modifier.padding(padding).fillMaxSize().padding(24.dp), contentAlignment = Alignment.Center) {
+                Text(
+                    "🔒 Voice settings are for grown-ups. Ask one to unlock kid mode from the library.",
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onBackground,
+                )
+            }
+        }
+        return
+    }
+
     val context = androidx.compose.ui.platform.LocalContext.current
     val scope = rememberCoroutineScope()
     var name by remember { mutableStateOf("") }
@@ -294,8 +310,9 @@ fun ProfilesScreen(nav: NavController) {
             item {
                 Text(
                     if (backupBusy) "Working…"
-                    else "Saves every voice and all recordings into one .zip file — keep it in " +
-                        "Downloads or Google Drive, and restore it on any phone.",
+                    else "Back up saves every voice and recording into one .zip — keep it in " +
+                        "Downloads or Google Drive. Restore accepts backups and story gifts " +
+                        "sent from another phone.",
                     fontSize = 12.sp,
                     lineHeight = 18.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,

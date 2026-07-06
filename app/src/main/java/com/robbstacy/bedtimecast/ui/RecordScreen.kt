@@ -30,7 +30,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,10 +49,12 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import com.robbstacy.bedtimecast.audio.SegmentPlayer
 import com.robbstacy.bedtimecast.audio.SegmentRecorder
+import com.robbstacy.bedtimecast.data.AppPrefs
 import com.robbstacy.bedtimecast.data.Narration
 import com.robbstacy.bedtimecast.data.ProfilesStore
 import com.robbstacy.bedtimecast.data.StoryRepository
 import com.robbstacy.bedtimecast.ui.theme.AppColors
+import kotlinx.coroutines.delay
 
 private data class ScriptLine(
     val pageIndex: Int,
@@ -64,6 +68,19 @@ fun RecordScreen(nav: NavController, storyId: String, startPage: Int, startSeg: 
     val context = LocalContext.current
     val story = StoryRepository.story(context, storyId) ?: return
     val profile = ProfilesStore.activeProfile
+
+    if (AppPrefs.kidMode) {
+        Scaffold(topBar = { AppTopBar("Record", nav) }) { padding ->
+            Box(Modifier.padding(padding).fillMaxSize().padding(24.dp), contentAlignment = Alignment.Center) {
+                Text(
+                    "🔒 Recording is for grown-ups. Ask one to unlock kid mode from the library.",
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onBackground,
+                )
+            }
+        }
+        return
+    }
 
     if (profile == null) {
         Scaffold(topBar = { AppTopBar("Record", nav) }) { padding ->
@@ -99,6 +116,10 @@ fun RecordScreen(nav: NavController, storyId: String, startPage: Int, startSeg: 
     }
     var isRecording by remember { mutableStateOf(false) }
     var showRedoDialog by remember { mutableStateOf(false) }
+    var level by remember { mutableFloatStateOf(0f) }
+    var quietTake by remember { mutableStateOf(false) }
+    var autoAdvance by remember { mutableStateOf(false) }
+    var showCelebration by remember { mutableStateOf(false) }
     var permissionGranted by remember {
         mutableStateOf(
             ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) ==
@@ -118,6 +139,21 @@ fun RecordScreen(nav: NavController, storyId: String, startPage: Int, startSeg: 
         }
     }
 
+    // Live input level while recording; flags a take that stayed very quiet.
+    LaunchedEffect(isRecording) {
+        if (!isRecording) return@LaunchedEffect
+        quietTake = false
+        var peak = 0f
+        while (isRecording) {
+            val amplitude = recorder.maxAmplitude() / 32767f
+            level = amplitude.coerceIn(0f, 1f)
+            if (level > peak) peak = level
+            delay(100)
+        }
+        level = 0f
+        quietTake = peak < 0.06f
+    }
+
     val line = script[lineIndex]
     val character = if (line.speaker == "narrator") null else story.character(line.speaker)
     val speakerColor =
@@ -132,11 +168,29 @@ fun RecordScreen(nav: NavController, storyId: String, startPage: Int, startSeg: 
         matrix = Narration.recordedMatrix(context, profile.id, story)
     }
 
+    // Next line after `from` that has no recording yet, wrapping to the start.
+    fun nextUnrecorded(from: Int, fresh: List<List<Boolean>>): Int? {
+        val order = (from + 1 until totalLines) + (0..from)
+        return order.firstOrNull { i ->
+            !fresh[script[i].pageIndex][script[i].segIndex]
+        }
+    }
+
     fun toggleRecording() {
         if (isRecording) {
             recorder.stop()
             isRecording = false
             refreshMatrix()
+            if (autoAdvance) {
+                val fresh = Narration.recordedMatrix(context, profile.id, story)
+                val next = nextUnrecorded(lineIndex, fresh)
+                if (next != null) {
+                    lineIndex = next
+                } else {
+                    autoAdvance = false
+                    showCelebration = true
+                }
+            }
         } else {
             if (!permissionGranted) {
                 permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
@@ -152,6 +206,17 @@ fun RecordScreen(nav: NavController, storyId: String, startPage: Int, startSeg: 
         if (isRecording) return
         previewPlayer.stop()
         lineIndex = index.coerceIn(0, totalLines - 1)
+    }
+
+    if (showCelebration) {
+        AlertDialog(
+            onDismissRequest = { showCelebration = false },
+            title = { Text("🎉 All lines recorded!") },
+            text = { Text("${story.title} is ready for bedtime, read by ${profile.name}.") },
+            confirmButton = {
+                TextButton(onClick = { showCelebration = false }) { Text("Hooray") }
+            },
+        )
     }
 
     if (showRedoDialog) {
@@ -196,6 +261,34 @@ fun RecordScreen(nav: NavController, storyId: String, startPage: Int, startSeg: 
                 color = AppColors.recorded,
                 trackColor = AppColors.selected,
             )
+
+            if (recordedCount < totalLines) {
+                Surface(
+                    shape = RoundedCornerShape(999.dp),
+                    color = if (autoAdvance) MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)
+                    else MaterialTheme.colorScheme.surfaceVariant,
+                    modifier = Modifier.clickable {
+                        if (autoAdvance) {
+                            autoAdvance = false
+                        } else {
+                            autoAdvance = true
+                            if (!isRecording) {
+                                val next = nextUnrecorded(lineIndex - 1, matrix)
+                                if (next != null) goToLine(next)
+                            }
+                        }
+                    },
+                ) {
+                    Text(
+                        if (autoAdvance) "🎬 Auto-next is ON — tap to stop"
+                        else "🎬 Record all remaining lines",
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.primary,
+                    )
+                }
+            }
 
             // Speaker cue card
             Surface(
@@ -317,16 +410,43 @@ fun RecordScreen(nav: NavController, storyId: String, startPage: Int, startSeg: 
                 }
             }
 
+            if (isRecording) {
+                Row(
+                    Modifier.fillMaxWidth().padding(horizontal = 48.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Box(
+                        Modifier
+                            .weight(1f)
+                            .height(8.dp)
+                            .background(AppColors.selected, RoundedCornerShape(4.dp)),
+                    ) {
+                        Box(
+                            Modifier
+                                .fillMaxWidth(level)
+                                .height(8.dp)
+                                .background(
+                                    if (level > 0.95f) AppColors.record else AppColors.gold,
+                                    RoundedCornerShape(4.dp),
+                                ),
+                        )
+                    }
+                }
+            }
+
             Text(
                 when {
                     isRecording -> "Recording… tap to stop"
+                    quietTake && currentRecorded ->
+                        "That take sounded very quiet — try again a little closer to the phone 🎤"
                     currentRecorded -> "This line is saved ❤️"
                     else -> "Tap to start recording"
                 },
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
                 fontSize = 13.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = if (quietTake && currentRecorded && !isRecording) AppColors.record
+                else MaterialTheme.colorScheme.onSurfaceVariant,
             )
 
             // Line navigation

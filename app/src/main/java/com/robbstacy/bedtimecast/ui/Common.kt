@@ -29,6 +29,8 @@ fun coverColor(story: Story): Color =
 fun AppTopBar(
     title: String,
     nav: NavController? = null,
+    containerColor: Color = MaterialTheme.colorScheme.background,
+    titleColor: Color = MaterialTheme.colorScheme.onSurface,
     actions: @Composable RowScope.() -> Unit = {},
 ) {
     TopAppBar(
@@ -42,7 +44,8 @@ fun AppTopBar(
         },
         actions = actions,
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.background,
+            containerColor = containerColor,
+            titleContentColor = titleColor,
         ),
     )
 }
