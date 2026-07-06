@@ -1,4 +1,4 @@
-# StoryTime 📖🌙
+# BedtimeCast 🎙🌙
 
 A bedtime story app where kids hear stories **read in their parent's voice** — even when the parent can't be there. Parents record themselves reading public domain children's stories, and (in a future phase) an optional voice model fills in any story they haven't recorded yet.
 
@@ -23,7 +23,7 @@ Real recordings and cloned audio share the same playback pipeline, so recording 
 
 ## Getting started (Android Studio)
 
-StoryTime is a React Native app with a **committed native Android project** in `android/` — a standard Gradle project. No Expo Go involved.
+BedtimeCast is a React Native app with a **committed native Android project** in `android/` — a standard Gradle project. No Expo Go involved.
 
 **One-time setup:** install [Android Studio](https://developer.android.com/studio) (bundles the Android SDK and JDK) and run `npm install` in the repo root.
 

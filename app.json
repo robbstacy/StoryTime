@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "StoryTime",
-    "slug": "storytime",
+    "name": "BedtimeCast",
+    "slug": "bedtimecast",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "storytime",
+    "scheme": "bedtimecast",
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true
@@ -18,7 +18,7 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.robbstacy.storytime"
+      "package": "com.robbstacy.bedtimecast"
     },
     "web": {
       "output": "static",
@@ -37,7 +37,7 @@
       [
         "expo-audio",
         {
-          "microphonePermission": "StoryTime uses the microphone so a parent can record themselves reading stories aloud."
+          "microphonePermission": "BedtimeCast uses the microphone so a parent can record themselves reading stories aloud."
         }
       ]
     ],

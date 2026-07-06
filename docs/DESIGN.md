@@ -1,4 +1,4 @@
-# StoryTime — Design & Planning
+# BedtimeCast — Design & Planning
 
 ## Vision
 
@@ -29,7 +29,7 @@ Rules that follow from this:
 
 ## Character voices & the cast
 
-Parents don't read in one voice — they growl the Wolf, squeak the pigs, and soften for Mama Rabbit. StoryTime treats that as structured data:
+Parents don't read in one voice — they growl the Wolf, squeak the pigs, and soften for Mama Rabbit. BedtimeCast treats that as structured data:
 
 - **Stories are segmented by speaker.** Every page is a sequence of segments attributed to the narrator or a named character (with a performance hint like "a big, gruff, growly voice"). The teleprompter records line-by-line, cueing the parent on who's speaking.
 - **Every character line is a labeled voice sample.** A recorded segment carries (audio, exact text, character, performer) — precisely the training pairs a voice model needs. No separate "calibration" recording session is ever required; performing the story *is* collecting the samples.

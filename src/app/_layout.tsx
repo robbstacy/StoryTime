@@ -19,7 +19,7 @@ export default function RootLayout() {
             headerShadowVisible: false,
             contentStyle: { backgroundColor: colors.background },
           }}>
-          <Stack.Screen name="index" options={{ title: 'StoryTime' }} />
+          <Stack.Screen name="index" options={{ title: 'BedtimeCast' }} />
           <Stack.Screen name="story/[id]" options={{ title: '' }} />
           <Stack.Screen name="record/[id]" options={{ title: 'Record' }} />
           <Stack.Screen name="cast" options={{ title: 'Voice Cast' }} />

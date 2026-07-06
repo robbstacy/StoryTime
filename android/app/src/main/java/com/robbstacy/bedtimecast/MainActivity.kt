@@ -1,4 +1,4 @@
-package com.robbstacy.storytime
+package com.robbstacy.bedtimecast
 import expo.modules.splashscreen.SplashScreenManager
 
 import android.os.Build

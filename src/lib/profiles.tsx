@@ -10,7 +10,7 @@ import {
 
 import type { VoiceProfile } from '@/types/story';
 
-const STORAGE_KEY = 'storytime.profiles.v1';
+const STORAGE_KEY = 'bedtimecast.profiles.v1';
 
 interface PersistedState {
   profiles: VoiceProfile[];

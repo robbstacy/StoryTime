@@ -86,7 +86,7 @@ export default function RecordScreen() {
     return (
       <View style={[styles.container, styles.centered, { backgroundColor: colors.background }]}>
         <Text style={[styles.helperText, { color: colors.text }]}>
-          Add a voice profile first, so StoryTime knows whose voice this is. Go back and tap the
+          Add a voice profile first, so BedtimeCast knows whose voice this is. Go back and tap the
           chip at the top of the library.
         </Text>
       </View>
