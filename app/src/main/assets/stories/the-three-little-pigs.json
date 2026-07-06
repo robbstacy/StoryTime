@@ -11,7 +11,7 @@
     { "id": "mama", "name": "Mama Pig", "emoji": "🐖", "voiceHint": "a warm, loving mama voice" },
     { "id": "pig-one", "name": "First Little Pig", "emoji": "🐷", "voiceHint": "a cheerful, lazy little voice" },
     { "id": "pig-two", "name": "Second Little Pig", "emoji": "🐷", "voiceHint": "a happy, carefree little voice" },
-    { "id": "pig-three", "name": "Third Little Pig", "emoji": "🐷", "voiceHint": "a clever, confident voice" },
+    { "id": "pig-three", "name": "Third Little Pig", "emoji": "🐷", "voiceHint": "a clever, confident little voice" },
     { "id": "pigs", "name": "All Three Pigs", "emoji": "🐷🐷🐷", "voiceHint": "three little voices together" },
     { "id": "wolf", "name": "The Big Bad Wolf", "emoji": "🐺", "voiceHint": "a big, gruff, growly voice" }
   ],
@@ -38,9 +38,9 @@
     },
     {
       "segments": [
-        { "speaker": "narrator", "text": "The third little pig worked all day, and the next day, and the day after that. Brick by brick, she built a strong little house with a chimney and a heavy front door." },
+        { "speaker": "narrator", "text": "The third little pig worked all day, and the next day, and the day after that. Brick by brick, he built a strong little house with a chimney and a heavy front door." },
         { "speaker": "pig-three", "text": "\"A house should keep you safe, and this one will.\"" },
-        { "speaker": "narrator", "text": "she said." }
+        { "speaker": "narrator", "text": "he said." }
       ]
     },
     {
@@ -63,7 +63,7 @@
         { "speaker": "wolf", "text": "\"Little pigs, little pigs, let me come in!\"" },
         { "speaker": "pigs", "text": "\"Not by the hairs of our chinny-chin-chins!\"" },
         { "speaker": "wolf", "text": "\"Then I'll huff, and I'll puff, and I'll blow your house in!\"" },
-        { "speaker": "narrator", "text": "And he huffed, and he puffed, and the stick house tumbled down — crash! The two little pigs ran all the way to their sister's house of bricks." }
+        { "speaker": "narrator", "text": "And he huffed, and he puffed, and the stick house tumbled down — crash! The two little pigs ran all the way to their brother's house of bricks." }
       ]
     },
     {
@@ -81,7 +81,7 @@
     },
     {
       "segments": [
-        { "speaker": "narrator", "text": "After that, the two brothers helped their sister lay bricks, and before winter came, all three pigs had strong brick houses side by side. And every Sunday they ate soup together — vegetable soup, of course — happily ever after." }
+        { "speaker": "narrator", "text": "After that, his two brothers helped him lay bricks, and before winter came, all three pigs had strong brick houses side by side. And every Sunday they ate soup together — vegetable soup, of course — happily ever after." }
       ]
     }
   ]
