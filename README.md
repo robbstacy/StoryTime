@@ -19,7 +19,8 @@ Every recorded character line is a labeled (audio + exact text + character) samp
 - 🎭 **Voice cast** — tracks every character a profile has performed and its sample coverage, ready for future voice modeling so "Papa's Wolf" can be cast in new stories.
 - ▶️ **Story player** — segment-by-segment narration stitched seamlessly, character-colored dialogue, auto page turns.
 - 👨‍👩‍👧 **Voice profiles** — any loved one can record; each keeps its own recordings and cast.
-- 📱 **Local-first** — all audio stays on the device. No accounts, no ads, no analytics.
+- ✨ **Voice models (ElevenLabs)** — with an API key and the voice owner's consent, recorded samples become voice models that read unrecorded lines, clearly labeled ✨; a casting screen assigns character voices to roles, and one button deletes all models everywhere.
+- 📱 **Local-first** — recordings stay on the device; only voice-model creation uploads samples, opt-in, to ElevenLabs. No accounts, no ads, no analytics.
 
 ## Getting started
 

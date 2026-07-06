@@ -22,6 +22,9 @@ object AppPrefs {
     var lastStoryId by mutableStateOf<String?>(null)
         private set
 
+    var elevenLabsKey by mutableStateOf("")
+        private set
+
     private val resumePages = LinkedHashMap<String, Int>()
 
     fun init(context: Context) {
@@ -31,6 +34,7 @@ object AppPrefs {
         favorites.clear()
         favorites.addAll(prefs.getStringSet("favorites", emptySet()).orEmpty())
         lastStoryId = prefs.getString("lastStoryId", null)
+        elevenLabsKey = prefs.getString("elevenLabsKey", "").orEmpty()
         prefs.getString("resume", null)?.split(';')?.forEach { pair ->
             val split = pair.lastIndexOf('=')
             if (split > 0) {
@@ -43,6 +47,11 @@ object AppPrefs {
     fun updateKidMode(on: Boolean) {
         kidMode = on
         prefs.edit().putBoolean("kidMode", on).apply()
+    }
+
+    fun updateElevenLabsKey(key: String) {
+        elevenLabsKey = key.trim()
+        prefs.edit().putString("elevenLabsKey", elevenLabsKey).apply()
     }
 
     fun isFavorite(storyId: String): Boolean = favorites.contains(storyId)

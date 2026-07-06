@@ -49,9 +49,11 @@ import androidx.navigation.NavController
 import com.robbstacy.bedtimecast.audio.SegmentPlayer
 import com.robbstacy.bedtimecast.data.AppPrefs
 import com.robbstacy.bedtimecast.data.Backup
+import com.robbstacy.bedtimecast.data.CloneEngine
 import com.robbstacy.bedtimecast.data.Narration
 import com.robbstacy.bedtimecast.data.ProfilesStore
 import com.robbstacy.bedtimecast.data.StoryRepository
+import com.robbstacy.bedtimecast.data.VoiceModels
 import com.robbstacy.bedtimecast.ui.theme.AppColors
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -69,8 +71,8 @@ fun StoryScreen(nav: NavController, storyId: String, startPage: Int) {
     val profile = ProfilesStore.activeProfile
     val scope = rememberCoroutineScope()
 
-    var matrix by remember {
-        mutableStateOf(Narration.recordedMatrix(context, profile?.id, story))
+    var narr by remember {
+        mutableStateOf(Narration.narrationMatrix(context, profile?.id, story))
     }
     var pageIndex by remember {
         mutableIntStateOf(startPage.coerceIn(0, story.pages.size - 1))
@@ -81,7 +83,9 @@ fun StoryScreen(nav: NavController, storyId: String, startPage: Int) {
     var bedtime by remember { mutableStateOf(false) }
     var timerMinutes by remember { mutableStateOf<Int?>(null) }
     var timerEndAt by remember { mutableStateOf<Long?>(null) }
-    var shareMessage by remember { mutableStateOf<String?>(null) }
+    var infoMessage by remember { mutableStateOf<String?>(null) }
+    var generating by remember { mutableStateOf<String?>(null) }
+    var showCasting by remember { mutableStateOf(false) }
 
     val player = remember { SegmentPlayer() }
     DisposableEffect(Unit) {
@@ -101,15 +105,15 @@ fun StoryScreen(nav: NavController, storyId: String, startPage: Int) {
     }
 
     val page = story.pages[pageIndex]
-    val pageRecorded = matrix[pageIndex]
-    val pagePlayable = pageRecorded.any { it }
+    val pageNarr = narr[pageIndex]
+    val pagePlayable = pageNarr.any { it.file != null }
     val isLastPage = pageIndex >= story.pages.size - 1
-    val anyRecorded = matrix.flatten().any { it }
+    val anyRecorded = narr.flatten().any { it.kind == Narration.Kind.RECORDED }
+    val anyMissing = narr.flatten().any { it.kind == Narration.Kind.NONE }
 
     fun playFrom(p: Int, s: Int) {
-        val prof = profile ?: return
-        val file = Narration.segmentFile(context, prof.id, story.id, p, s)
-        if (!file.exists()) {
+        val file = narr[p][s].file
+        if (file == null) {
             playing = false
             return
         }
@@ -174,18 +178,85 @@ fun StoryScreen(nav: NavController, storyId: String, startPage: Int) {
                         Intent.createChooser(send, "Send \"${story.title}\" read by ${prof.name}"),
                     )
                 },
-                onFailure = { shareMessage = it.message ?: "Could not create the story gift." },
+                onFailure = { infoMessage = it.message ?: "Could not create the story gift." },
             )
         }
     }
 
-    shareMessage?.let { message ->
+    fun generateMissing() {
+        val prof = profile ?: return
+        generating = "Starting…"
+        scope.launch {
+            val result = CloneEngine.generateMissing(context, prof, story) { done, total ->
+                generating = "Generating line $done of $total…"
+            }
+            generating = null
+            result.fold(
+                onSuccess = { count ->
+                    narr = Narration.narrationMatrix(context, prof.id, story)
+                    infoMessage = "✨ Generated $count lines in ${prof.name}'s voice."
+                },
+                onFailure = { infoMessage = it.message ?: "Generation failed." },
+            )
+        }
+    }
+
+    infoMessage?.let { message ->
         AlertDialog(
-            onDismissRequest = { shareMessage = null },
-            title = { Text("Story gift") },
+            onDismissRequest = { infoMessage = null },
+            title = { Text(story.title) },
             text = { Text(message) },
             confirmButton = {
-                TextButton(onClick = { shareMessage = null }) { Text("OK") }
+                TextButton(onClick = { infoMessage = null }) { Text("OK") }
+            },
+        )
+    }
+
+    if (showCasting && profile != null) {
+        AlertDialog(
+            onDismissRequest = { showCasting = false },
+            title = { Text("🎭 Cast the roles") },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Text(
+                        "Tap a role to change which voice model reads its lines when " +
+                            "generating. Real recordings always win.",
+                        fontSize = 13.sp,
+                    )
+                    story.characters.forEach { character ->
+                        val assignedKey = VoiceModels.assignedKey(profile.id, story.id, character.id)
+                        val options = listOf<String?>(null) +
+                            VoiceModels.modelsFor(profile.id).map { it.key }
+                        val currentLabel = assignedKey
+                            ?.let { VoiceModels.model(profile.id, it)?.displayName }
+                            ?: "Auto (narrator voice)"
+                        Surface(
+                            shape = RoundedCornerShape(12.dp),
+                            color = MaterialTheme.colorScheme.surfaceVariant,
+                            modifier = Modifier.fillMaxWidth().clickable {
+                                val index = options.indexOf(assignedKey)
+                                val next = options[(index + 1) % options.size]
+                                VoiceModels.assign(profile.id, story.id, character.id, next)
+                            },
+                        ) {
+                            Column(Modifier.padding(horizontal = 12.dp, vertical = 8.dp)) {
+                                Text(
+                                    "${character.emoji} ${character.name}",
+                                    fontWeight = FontWeight.SemiBold,
+                                    fontSize = 14.sp,
+                                )
+                                Text(
+                                    "→ $currentLabel",
+                                    fontSize = 13.sp,
+                                    color = MaterialTheme.colorScheme.primary,
+                                )
+                            }
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { showCasting = false }) { Text("Done") }
             },
         )
     }
@@ -195,12 +266,14 @@ fun StoryScreen(nav: NavController, storyId: String, startPage: Int) {
     val mainText = if (bedtime) NIGHT_TEXT else MaterialTheme.colorScheme.onBackground
     val dimText = if (bedtime) NIGHT_DIM else MaterialTheme.colorScheme.onSurfaceVariant
 
-    val playing2 = playing && !paused
+    val activelyPlaying = playing && !paused
     val currentSegment = page.segments.getOrNull(segIndex)
+    val currentNarration = pageNarr.getOrNull(segIndex)
     val currentCharacter = currentSegment
         ?.takeIf { it.speaker != "narrator" }
         ?.let { story.character(it.speaker) }
-    val firstMissing = pageRecorded.indexOfFirst { !it }
+    val firstMissing = pageNarr.indexOfFirst { it.file == null }
+    val hasModels = profile != null && VoiceModels.modelsFor(profile.id).isNotEmpty()
 
     Scaffold(
         containerColor = bgColor,
@@ -211,6 +284,11 @@ fun StoryScreen(nav: NavController, storyId: String, startPage: Int) {
                 containerColor = bgColor,
                 titleColor = mainText,
                 actions = {
+                    if (!AppPrefs.kidMode && hasModels) {
+                        TextButton(onClick = { showCasting = true }) {
+                            Text("🎭", fontSize = 18.sp)
+                        }
+                    }
                     if (!AppPrefs.kidMode && anyRecorded) {
                         TextButton(onClick = { shareStoryGift() }) {
                             Text("🎁", fontSize = 18.sp)
@@ -237,16 +315,28 @@ fun StoryScreen(nav: NavController, storyId: String, startPage: Int) {
             val badgeText: String
             val badgeColor: Color
             when {
-                playing2 && currentCharacter != null && profile != null -> {
+                activelyPlaying && currentNarration?.kind == Narration.Kind.CLONED && profile != null -> {
+                    badgeText = if (currentCharacter != null) {
+                        "✨ ${currentCharacter.emoji} ${profile.name}'s ${currentCharacter.name} (AI)"
+                    } else {
+                        "✨ ${profile.name}'s voice (AI)"
+                    }
+                    badgeColor = if (bedtime) NIGHT_DIM else AppColors.gold
+                }
+                activelyPlaying && currentCharacter != null && profile != null -> {
                     badgeText = "${currentCharacter.emoji} ${profile.name}'s ${currentCharacter.name}"
                     badgeColor = if (bedtime) NIGHT_TEXT else characterColor(story, currentCharacter.id)
                 }
-                pageRecorded.isNotEmpty() && pageRecorded.all { it } && profile != null -> {
+                pageNarr.isNotEmpty() && pageNarr.all { it.kind == Narration.Kind.RECORDED } && profile != null -> {
                     badgeText = "❤️ Read by ${profile.name}"
                     badgeColor = if (bedtime) NIGHT_DIM else AppColors.recorded
                 }
                 pagePlayable -> {
-                    badgeText = "Some lines aren't recorded yet"
+                    badgeText = if (pageNarr.any { it.kind == Narration.Kind.CLONED }) {
+                        "❤️+✨ Recorded and AI lines"
+                    } else {
+                        "Some lines aren't recorded yet"
+                    }
                     badgeColor = dimText
                 }
                 else -> {
@@ -312,7 +402,7 @@ fun StoryScreen(nav: NavController, storyId: String, startPage: Int) {
                     Text(
                         buildAnnotatedString {
                             page.segments.forEachIndexed { index, segment ->
-                                val isCurrent = playing2 && index == segIndex
+                                val isCurrent = activelyPlaying && index == segIndex
                                 val isDialogue = segment.speaker != "narrator"
                                 withStyle(
                                     SpanStyle(
@@ -344,11 +434,14 @@ fun StoryScreen(nav: NavController, storyId: String, startPage: Int) {
                 horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
             ) {
                 story.pages.forEachIndexed { index, _ ->
+                    val row = narr[index]
                     val dotColor = when {
                         index == pageIndex -> if (bedtime) NIGHT_TEXT else MaterialTheme.colorScheme.primary
-                        matrix[index].isNotEmpty() && matrix[index].all { it } ->
+                        row.isNotEmpty() && row.all { it.kind == Narration.Kind.RECORDED } ->
                             if (bedtime) NIGHT_DIM else AppColors.recorded
-                        matrix[index].any { it } ->
+                        row.isNotEmpty() && row.all { it.file != null } ->
+                            if (bedtime) NIGHT_DIM else AppColors.gold
+                        row.any { it.file != null } ->
                             if (bedtime) NIGHT_DIM.copy(alpha = 0.6f)
                             else MaterialTheme.colorScheme.primary.copy(alpha = 0.4f)
                         else -> if (bedtime) NIGHT_DIM.copy(alpha = 0.25f) else AppColors.selected
@@ -395,14 +488,14 @@ fun StoryScreen(nav: NavController, storyId: String, startPage: Int) {
                                     }
                                     else -> playFrom(
                                         pageIndex,
-                                        if (pageRecorded[0]) 0 else firstMissing.coerceAtLeast(0),
+                                        pageNarr.indexOfFirst { it.file != null }.coerceAtLeast(0),
                                     )
                                 }
                             },
                         contentAlignment = Alignment.Center,
                     ) {
                         Text(
-                            if (playing2) "⏸" else "▶",
+                            if (activelyPlaying) "⏸" else "▶",
                             fontSize = 28.sp,
                             color = if (bedtime) NIGHT_BG else MaterialTheme.colorScheme.onPrimary,
                         )
@@ -448,6 +541,22 @@ fun StoryScreen(nav: NavController, storyId: String, startPage: Int) {
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = if (bedtime) NIGHT_DIM else MaterialTheme.colorScheme.primary,
+                )
+            }
+
+            // Voice-model generation for everything still missing
+            if (!AppPrefs.kidMode && profile != null && anyMissing &&
+                AppPrefs.elevenLabsKey.isNotBlank() && VoiceModels.narrator(profile.id) != null
+            ) {
+                Text(
+                    generating ?: "✨ Generate the missing lines in ${profile.name}'s voice",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable(enabled = generating == null) { generateMissing() },
+                    textAlign = TextAlign.Center,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = if (bedtime) NIGHT_DIM else AppColors.gold,
                 )
             }
 

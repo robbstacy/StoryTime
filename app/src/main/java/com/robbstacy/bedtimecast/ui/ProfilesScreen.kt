@@ -44,7 +44,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
 import com.robbstacy.bedtimecast.data.AppPrefs
 import com.robbstacy.bedtimecast.data.Backup
+import com.robbstacy.bedtimecast.data.CloneEngine
 import com.robbstacy.bedtimecast.data.ProfilesStore
+import com.robbstacy.bedtimecast.data.VoiceModels
 import com.robbstacy.bedtimecast.data.VoiceProfile
 import com.robbstacy.bedtimecast.ui.theme.AppColors
 import kotlinx.coroutines.Dispatchers
@@ -75,6 +77,39 @@ fun ProfilesScreen(nav: NavController) {
     var removeTarget by remember { mutableStateOf<VoiceProfile?>(null) }
     var backupMessage by remember { mutableStateOf<String?>(null) }
     var backupBusy by remember { mutableStateOf(false) }
+    var apiKeyDraft by remember { mutableStateOf(AppPrefs.elevenLabsKey) }
+    var showDeleteModels by remember { mutableStateOf(false) }
+
+    if (showDeleteModels) {
+        AlertDialog(
+            onDismissRequest = { showDeleteModels = false },
+            title = { Text("Delete all voice models?") },
+            text = {
+                Text(
+                    "This removes every voice model from ElevenLabs and deletes all " +
+                        "AI-generated narration from this phone. Your real recordings are " +
+                        "not touched.",
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    showDeleteModels = false
+                    backupBusy = true
+                    scope.launch {
+                        val result = CloneEngine.deleteAllModels(context)
+                        backupBusy = false
+                        backupMessage = result.fold(
+                            onSuccess = { "Deleted $it voice models ✅" },
+                            onFailure = { "Delete failed: ${it.message}" },
+                        )
+                    }
+                }) { Text("Delete them", color = AppColors.record) }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteModels = false }) { Text("Cancel") }
+            },
+        )
+    }
 
     val exportLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.CreateDocument("application/zip"),
@@ -321,9 +356,71 @@ fun ProfilesScreen(nav: NavController) {
 
             item {
                 Text(
-                    "🔒 Recordings are stored only on this device. If voice cloning is added " +
-                        "later, it will always ask the voice's owner for permission first, and " +
-                        "their voice model can be deleted at any time.",
+                    "VOICE AI (ELEVENLABS)",
+                    modifier = Modifier.padding(top = 16.dp),
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 0.8.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+
+            item {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    OutlinedTextField(
+                        value = apiKeyDraft,
+                        onValueChange = { apiKeyDraft = it },
+                        modifier = Modifier.weight(1f),
+                        placeholder = { Text("ElevenLabs API key") },
+                        singleLine = true,
+                    )
+                    Button(
+                        onClick = { AppPrefs.updateElevenLabsKey(apiKeyDraft) },
+                        enabled = apiKeyDraft.trim() != AppPrefs.elevenLabsKey,
+                    ) {
+                        Text("Save", fontWeight = FontWeight.Bold)
+                    }
+                }
+            }
+
+            item {
+                Text(
+                    if (AppPrefs.elevenLabsKey.isNotBlank()) {
+                        "Key saved ✅ — create voice models from the 🎭 Voice Cast screen. " +
+                            "Models read unrecorded lines in that voice, always labeled ✨."
+                    } else {
+                        "Paste an API key from elevenlabs.io (Profile → API Keys) to turn " +
+                            "recorded samples into voice models."
+                    },
+                    fontSize = 12.sp,
+                    lineHeight = 18.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+
+            if (VoiceModels.models.isNotEmpty()) {
+                item {
+                    OutlinedButton(
+                        onClick = { showDeleteModels = true },
+                        enabled = !backupBusy,
+                    ) {
+                        Text(
+                            "🗑 Delete all voice models (${VoiceModels.models.size})",
+                            fontWeight = FontWeight.SemiBold,
+                            color = AppColors.record,
+                        )
+                    }
+                }
+            }
+
+            item {
+                Text(
+                    "🔒 Recordings stay on this device. Creating a voice model uploads that " +
+                        "voice's samples to ElevenLabs with the owner's consent — and the " +
+                        "delete button above removes them again, everywhere.",
                     modifier = Modifier.padding(top = 16.dp),
                     fontSize = 13.sp,
                     lineHeight = 20.sp,

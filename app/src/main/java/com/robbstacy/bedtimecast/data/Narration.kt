@@ -31,6 +31,96 @@ object Narration {
         segmentFile(context, profileId, storyId, page, segment).delete()
     }
 
+    /** Cloned (AI-generated) narration cache, mirroring the recordings layout. */
+    fun clonedFile(
+        context: Context,
+        profileId: String,
+        storyId: String,
+        page: Int,
+        segment: Int,
+    ): File {
+        val dir = File(File(File(context.filesDir, "cloned"), profileId), storyId)
+        return File(dir, "p$page-s$segment.mp3")
+    }
+
+    enum class Kind { RECORDED, CLONED, NONE }
+
+    data class SegmentNarration(val kind: Kind, val file: File?)
+
+    /** Real recording first, then cached cloned audio, then nothing. */
+    fun segmentNarration(
+        context: Context,
+        profileId: String?,
+        storyId: String,
+        page: Int,
+        segment: Int,
+    ): SegmentNarration {
+        if (profileId == null) return SegmentNarration(Kind.NONE, null)
+        val recorded = segmentFile(context, profileId, storyId, page, segment)
+        if (recorded.exists()) return SegmentNarration(Kind.RECORDED, recorded)
+        val cloned = clonedFile(context, profileId, storyId, page, segment)
+        if (cloned.exists()) return SegmentNarration(Kind.CLONED, cloned)
+        return SegmentNarration(Kind.NONE, null)
+    }
+
+    fun narrationMatrix(context: Context, profileId: String?, story: Story): List<List<SegmentNarration>> =
+        story.pages.mapIndexed { pageIndex, page ->
+            page.segments.indices.map { segIndex ->
+                segmentNarration(context, profileId, story.id, pageIndex, segIndex)
+            }
+        }
+
+    data class SampleStats(val lines: Int, val words: Int)
+
+    /** Recorded narrator material across the whole library for one profile. */
+    fun narratorStats(context: Context, profileId: String, stories: List<Story>): SampleStats {
+        var lines = 0
+        var words = 0
+        for (story in stories) {
+            story.pages.forEachIndexed { pageIndex, page ->
+                page.segments.forEachIndexed { segIndex, segment ->
+                    if (segment.speaker != "narrator") return@forEachIndexed
+                    if (segmentFile(context, profileId, story.id, pageIndex, segIndex).exists()) {
+                        lines++
+                        words += segment.text.split(Regex("\\s+")).count { it.isNotBlank() }
+                    }
+                }
+            }
+        }
+        return SampleStats(lines, words)
+    }
+
+    fun narratorFiles(context: Context, profileId: String, stories: List<Story>): List<File> {
+        val files = mutableListOf<File>()
+        for (story in stories) {
+            story.pages.forEachIndexed { pageIndex, page ->
+                page.segments.forEachIndexed { segIndex, segment ->
+                    if (segment.speaker != "narrator") return@forEachIndexed
+                    val file = segmentFile(context, profileId, story.id, pageIndex, segIndex)
+                    if (file.exists()) files.add(file)
+                }
+            }
+        }
+        return files
+    }
+
+    fun characterFiles(
+        context: Context,
+        profileId: String,
+        story: Story,
+        characterId: String,
+    ): List<File> {
+        val files = mutableListOf<File>()
+        story.pages.forEachIndexed { pageIndex, page ->
+            page.segments.forEachIndexed { segIndex, segment ->
+                if (segment.speaker != characterId) return@forEachIndexed
+                val file = segmentFile(context, profileId, story.id, pageIndex, segIndex)
+                if (file.exists()) files.add(file)
+            }
+        }
+        return files
+    }
+
     /** Per page, per segment: is a recording present? */
     fun recordedMatrix(context: Context, profileId: String?, story: Story): List<List<Boolean>> =
         story.pages.mapIndexed { pageIndex, page ->

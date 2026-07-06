@@ -11,4 +11,5 @@
 
 - Native Android app: Kotlin + Jetpack Compose, no React Native/Expo (the old RN implementation is on the `react-native-version` branch).
 - Open the repo root in Android Studio to build; CI (`.github/workflows/build-apk.yml`) builds a debug APK on every push to `main` and publishes it to the rolling `latest` release for phone installs.
-- App identity: BedtimeCast, `com.robbstacy.bedtimecast`.
+- App identity: BedtimeCast, `com.robbstacy.bedtimecast`. All builds signed with the committed `signing/shared-debug.keystore` so sideload updates install over the top.
+- Voice cloning: ElevenLabs (user's API key, entered in-app). Consent dialog before any sample upload; ✨ labels on generated audio; delete-all-models button must keep working.
