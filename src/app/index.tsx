@@ -28,19 +28,29 @@ export default function LibraryScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <Link href="/profiles" asChild>
-        <Pressable style={[styles.profileChip, { backgroundColor: colors.backgroundElement }]}>
-          {activeProfile ? (
-            <Text style={[styles.profileChipText, { color: colors.text }]}>
-              {activeProfile.emoji} Reading with {activeProfile.name}
-            </Text>
-          ) : (
-            <Text style={[styles.profileChipText, { color: colors.accent }]}>
-              👋 Tap to add a voice — Mom, Dad, Grandma…
-            </Text>
-          )}
-        </Pressable>
-      </Link>
+      <View style={styles.chipRow}>
+        <Link href="/profiles" asChild>
+          <Pressable
+            style={[styles.profileChip, { backgroundColor: colors.backgroundElement }]}>
+            {activeProfile ? (
+              <Text style={[styles.profileChipText, { color: colors.text }]}>
+                {activeProfile.emoji} Reading with {activeProfile.name}
+              </Text>
+            ) : (
+              <Text style={[styles.profileChipText, { color: colors.accent }]}>
+                👋 Tap to add a voice — Mom, Dad, Grandma…
+              </Text>
+            )}
+          </Pressable>
+        </Link>
+        {activeProfile && (
+          <Link href="/cast" asChild>
+            <Pressable style={[styles.castChip, { backgroundColor: colors.backgroundElement }]}>
+              <Text style={styles.castChipText}>🎭</Text>
+            </Pressable>
+          </Link>
+        )}
+      </View>
 
       <FlatList
         data={STORIES}
@@ -80,7 +90,7 @@ function StoryCard({
     statusText = `❤️ Read by ${profileName}`;
     statusColor = colors.recorded;
   } else if (summary.status === 'partial') {
-    statusText = `${summary.recordedPages} of ${summary.totalPages} pages recorded`;
+    statusText = `${summary.recorded} of ${summary.total} lines recorded`;
     statusColor = colors.accent;
   }
 
@@ -109,9 +119,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  profileChip: {
+  chipRow: {
+    flexDirection: 'row',
+    gap: Spacing.two,
     marginHorizontal: Spacing.three,
     marginTop: Spacing.two,
+  },
+  profileChip: {
+    flex: 1,
     borderRadius: 999,
     paddingVertical: Spacing.two + 2,
     paddingHorizontal: Spacing.three,
@@ -120,6 +135,16 @@ const styles = StyleSheet.create({
   profileChipText: {
     fontSize: 15,
     fontWeight: '600',
+  },
+  castChip: {
+    borderRadius: 999,
+    paddingVertical: Spacing.two + 2,
+    paddingHorizontal: Spacing.three,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  castChipText: {
+    fontSize: 17,
   },
   list: {
     padding: Spacing.three,

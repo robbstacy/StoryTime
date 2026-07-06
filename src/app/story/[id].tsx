@@ -1,18 +1,15 @@
-import {
-  setAudioModeAsync,
-  useAudioPlayer,
-  useAudioPlayerStatus,
-} from 'expo-audio';
+import { setAudioModeAsync, useAudioPlayer, useAudioPlayerStatus } from 'expo-audio';
 import { Stack, useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { Fonts, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
+import { characterColor, getCharacter } from '@/lib/cast';
 import { getStoryNarration } from '@/lib/narration';
 import { useProfiles } from '@/lib/profiles';
 import { getStory } from '@/lib/stories';
-import type { PageNarration } from '@/types/story';
+import type { SegmentNarration } from '@/types/story';
 
 export default function StoryScreen() {
   const colors = useTheme();
@@ -22,7 +19,8 @@ export default function StoryScreen() {
   const story = getStory(id);
 
   const [pageIndex, setPageIndex] = useState(0);
-  const [narrations, setNarrations] = useState<PageNarration[]>([]);
+  const [segIndex, setSegIndex] = useState(0);
+  const [narrations, setNarrations] = useState<SegmentNarration[][]>([]);
   const [autoPlay, setAutoPlay] = useState(false);
 
   const player = useAudioPlayer();
@@ -37,18 +35,22 @@ export default function StoryScreen() {
     }, [story, activeProfile?.id])
   );
 
-  const narration = narrations[pageIndex] ?? { kind: 'none' as const, uri: null };
+  const page = story?.pages[pageIndex];
+  const pageNarrations = narrations[pageIndex] ?? [];
   const isLastPage = story ? pageIndex >= story.pages.length - 1 : true;
+  const pageFullyRecorded = (row?: SegmentNarration[]) =>
+    !!row && row.length > 0 && row.every((n) => n.uri);
 
-  const playPage = useCallback(
-    async (index: number) => {
-      const target = narrations[index];
+  const playSegment = useCallback(
+    async (pIndex: number, sIndex: number) => {
+      const target = narrations[pIndex]?.[sIndex];
       if (!target?.uri) {
         setAutoPlay(false);
         return;
       }
       await setAudioModeAsync({ allowsRecording: false, playsInSilentMode: true });
       finishHandled.current = false;
+      setSegIndex(sIndex);
       player.replace({ uri: target.uri });
       player.play();
       setAutoPlay(true);
@@ -56,28 +58,36 @@ export default function StoryScreen() {
     [narrations, player]
   );
 
-  // When a page's audio finishes, turn the page and keep reading.
+  // When a segment finishes, move to the next segment — or the next page.
   useEffect(() => {
     if (!status.didJustFinish || finishHandled.current) {
       return;
     }
     finishHandled.current = true;
-    if (autoPlay && !isLastPage) {
-      const next = pageIndex + 1;
-      setPageIndex(next);
-      playPage(next);
+    if (!autoPlay || !story) {
+      return;
+    }
+    const nextSeg = segIndex + 1;
+    if (nextSeg < (story.pages[pageIndex]?.segments.length ?? 0)) {
+      playSegment(pageIndex, nextSeg);
+    } else if (!isLastPage) {
+      const nextPage = pageIndex + 1;
+      setPageIndex(nextPage);
+      setSegIndex(0);
+      playSegment(nextPage, 0);
     } else {
       setAutoPlay(false);
     }
-  }, [status.didJustFinish, autoPlay, isLastPage, pageIndex, playPage]);
+  }, [status.didJustFinish, autoPlay, story, segIndex, pageIndex, isLastPage, playSegment]);
 
   const goToPage = (index: number) => {
     player.pause();
     setAutoPlay(false);
     setPageIndex(index);
+    setSegIndex(0);
   };
 
-  if (!story) {
+  if (!story || !page) {
     return (
       <View style={[styles.container, { backgroundColor: colors.background }]}>
         <Text style={{ color: colors.text }}>Story not found.</Text>
@@ -86,23 +96,30 @@ export default function StoryScreen() {
   }
 
   const playing = status.playing;
+  const currentSegment = page.segments[segIndex];
+  const currentCharacter =
+    currentSegment && currentSegment.speaker !== 'narrator'
+      ? getCharacter(story, currentSegment.speaker)
+      : null;
+  const firstMissing = pageNarrations.findIndex((n) => !n.uri);
+  const pagePlayable = pageNarrations.some((n) => n.uri);
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <Stack.Screen options={{ title: story.title }} />
 
       <View style={styles.badgeRow}>
-        {narration.kind === 'recorded' && activeProfile ? (
+        {playing && currentCharacter ? (
+          <Text style={[styles.badge, { color: characterColor(story, currentCharacter.id) }]}>
+            {currentCharacter.emoji} {activeProfile?.name}&apos;s {currentCharacter.name}
+          </Text>
+        ) : pageFullyRecorded(pageNarrations) && activeProfile ? (
           <Text style={[styles.badge, { color: colors.recorded }]}>
             ❤️ Read by {activeProfile.name}
           </Text>
-        ) : narration.kind === 'cloned' && activeProfile ? (
-          <Text style={[styles.badge, { color: colors.cloned }]}>
-            ✨ {activeProfile.name}&apos;s voice
-          </Text>
         ) : (
           <Text style={[styles.badge, { color: colors.textSecondary }]}>
-            This page isn&apos;t recorded yet
+            {pagePlayable ? 'Some lines aren’t recorded yet' : 'This page isn’t recorded yet'}
           </Text>
         )}
       </View>
@@ -112,7 +129,21 @@ export default function StoryScreen() {
         contentContainerStyle={styles.pageContent}>
         <Text style={styles.pageEmoji}>{story.coverEmoji}</Text>
         <Text style={[styles.pageText, { color: colors.text }]}>
-          {story.pages[pageIndex].text}
+          {page.segments.map((segment, index) => {
+            const isCurrent = playing && index === segIndex;
+            const isDialogue = segment.speaker !== 'narrator';
+            return (
+              <Text
+                key={index}
+                style={[
+                  isDialogue && { color: characterColor(story, segment.speaker), fontWeight: '600' },
+                  isCurrent && styles.currentSegment,
+                ]}>
+                {segment.text}
+                {index < page.segments.length - 1 ? ' ' : ''}
+              </Text>
+            );
+          })}
         </Text>
       </ScrollView>
 
@@ -126,9 +157,11 @@ export default function StoryScreen() {
                   backgroundColor:
                     index === pageIndex
                       ? colors.accent
-                      : narrations[index]?.kind === 'recorded'
+                      : pageFullyRecorded(narrations[index])
                         ? colors.recorded
-                        : colors.backgroundSelected,
+                        : narrations[index]?.some((n) => n.uri)
+                          ? colors.accentSoft
+                          : colors.backgroundSelected,
                 },
               ]}
             />
@@ -144,14 +177,14 @@ export default function StoryScreen() {
           <Text style={[styles.navButtonText, { color: colors.text }]}>‹</Text>
         </Pressable>
 
-        {narration.uri ? (
+        {pagePlayable ? (
           <Pressable
             onPress={() => {
               if (playing) {
                 player.pause();
                 setAutoPlay(false);
               } else {
-                playPage(pageIndex);
+                playSegment(pageIndex, pageNarrations[0]?.uri ? 0 : Math.max(firstMissing, 0));
               }
             }}
             style={[styles.playButton, { backgroundColor: colors.accent }]}>
@@ -159,7 +192,7 @@ export default function StoryScreen() {
           </Pressable>
         ) : (
           <Pressable
-            onPress={() => router.push(`/record/${story.id}?page=${pageIndex}`)}
+            onPress={() => router.push(`/record/${story.id}?page=${pageIndex}&seg=0`)}
             style={[styles.recordCta, { backgroundColor: colors.accentSoft }]}>
             <Text style={[styles.recordCtaText, { color: colors.accent }]}>
               🎙 Record this page
@@ -174,6 +207,15 @@ export default function StoryScreen() {
           <Text style={[styles.navButtonText, { color: colors.text }]}>›</Text>
         </Pressable>
       </View>
+
+      {pagePlayable && firstMissing >= 0 && (
+        <Pressable
+          onPress={() => router.push(`/record/${story.id}?page=${pageIndex}&seg=${firstMissing}`)}>
+          <Text style={[styles.missingLink, { color: colors.accent }]}>
+            🎙 Record the missing lines on this page
+          </Text>
+        </Pressable>
+      )}
 
       <Text style={[styles.pageCount, { color: colors.textSecondary }]}>
         Page {pageIndex + 1} of {story.pages.length}
@@ -212,6 +254,9 @@ const styles = StyleSheet.create({
     lineHeight: 34,
     fontFamily: Fonts?.serif,
     textAlign: 'center',
+  },
+  currentSegment: {
+    textDecorationLine: 'underline',
   },
   dots: {
     flexDirection: 'row',
@@ -260,6 +305,12 @@ const styles = StyleSheet.create({
   recordCtaText: {
     fontSize: 16,
     fontWeight: '700',
+  },
+  missingLink: {
+    textAlign: 'center',
+    fontSize: 14,
+    fontWeight: '600',
+    marginTop: Spacing.two,
   },
   pageCount: {
     textAlign: 'center',

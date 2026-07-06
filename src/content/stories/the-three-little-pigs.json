@@ -7,36 +7,82 @@
   "coverEmoji": "🐷",
   "coverColor": "#E8998D",
   "minutes": 5,
+  "characters": [
+    { "id": "mama", "name": "Mama Pig", "emoji": "🐖", "voiceHint": "a warm, loving mama voice" },
+    { "id": "pig-one", "name": "First Little Pig", "emoji": "🐷", "voiceHint": "a cheerful, lazy little voice" },
+    { "id": "pig-two", "name": "Second Little Pig", "emoji": "🐷", "voiceHint": "a happy, carefree little voice" },
+    { "id": "pig-three", "name": "Third Little Pig", "emoji": "🐷", "voiceHint": "a clever, confident voice" },
+    { "id": "pigs", "name": "All Three Pigs", "emoji": "🐷🐷🐷", "voiceHint": "three little voices together" },
+    { "id": "wolf", "name": "The Big Bad Wolf", "emoji": "🐺", "voiceHint": "a big, gruff, growly voice" }
+  ],
   "pages": [
     {
-      "text": "Once upon a time, there were three little pigs who set out into the world to build homes of their very own. Their mother hugged each of them goodbye and said, \"Work hard, be clever, and take care of one another.\""
+      "segments": [
+        { "speaker": "narrator", "text": "Once upon a time, there were three little pigs who set out into the world to build homes of their very own. Their mother hugged each of them goodbye and said," },
+        { "speaker": "mama", "text": "\"Work hard, be clever, and take care of one another.\"" }
+      ]
     },
     {
-      "text": "The first little pig did not like to work very hard. He found a farmer with a cart of straw and built himself a house of straw before lunchtime. \"Finished already!\" he said, and he spent the rest of the day napping in the sun."
+      "segments": [
+        { "speaker": "narrator", "text": "The first little pig did not like to work very hard. He found a farmer with a cart of straw and built himself a house of straw before lunchtime." },
+        { "speaker": "pig-one", "text": "\"Finished already!\"" },
+        { "speaker": "narrator", "text": "he said, and he spent the rest of the day napping in the sun." }
+      ]
     },
     {
-      "text": "The second little pig worked a little harder. He found a woodcutter with a bundle of sticks and built himself a house of sticks by suppertime. \"Good enough!\" he said, and he went inside to play."
+      "segments": [
+        { "speaker": "narrator", "text": "The second little pig worked a little harder. He found a woodcutter with a bundle of sticks and built himself a house of sticks by suppertime." },
+        { "speaker": "pig-two", "text": "\"Good enough!\"" },
+        { "speaker": "narrator", "text": "he said, and he went inside to play." }
+      ]
     },
     {
-      "text": "The third little pig worked all day, and the next day, and the day after that. Brick by brick, she built a strong little house with a chimney and a heavy front door. \"A house should keep you safe,\" she said, \"and this one will.\""
+      "segments": [
+        { "speaker": "narrator", "text": "The third little pig worked all day, and the next day, and the day after that. Brick by brick, she built a strong little house with a chimney and a heavy front door." },
+        { "speaker": "pig-three", "text": "\"A house should keep you safe, and this one will.\"" },
+        { "speaker": "narrator", "text": "she said." }
+      ]
     },
     {
-      "text": "Now, in the woods nearby there lived a big bad wolf. He came to the house of straw, knocked on the door, and growled, \"Little pig, little pig, let me come in!\" \"Not by the hair of my chinny-chin-chin!\" cried the first pig. \"Then I'll huff, and I'll puff, and I'll blow your house in!\""
+      "segments": [
+        { "speaker": "narrator", "text": "Now, in the woods nearby there lived a big bad wolf. He came to the house of straw, knocked on the door, and growled," },
+        { "speaker": "wolf", "text": "\"Little pig, little pig, let me come in!\"" },
+        { "speaker": "pig-one", "text": "\"Not by the hair of my chinny-chin-chin!\"" },
+        { "speaker": "narrator", "text": "cried the first pig." },
+        { "speaker": "wolf", "text": "\"Then I'll huff, and I'll puff, and I'll blow your house in!\"" }
+      ]
     },
     {
-      "text": "So the wolf huffed, and he puffed, and he blew the straw house down — whoosh! The first little pig ran as fast as his trotters could carry him to his brother's house of sticks."
+      "segments": [
+        { "speaker": "narrator", "text": "So the wolf huffed, and he puffed, and he blew the straw house down — whoosh! The first little pig ran as fast as his trotters could carry him to his brother's house of sticks." }
+      ]
     },
     {
-      "text": "Soon the wolf arrived at the stick house. \"Little pigs, little pigs, let me come in!\" \"Not by the hairs of our chinny-chin-chins!\" \"Then I'll huff, and I'll puff, and I'll blow your house in!\" And he huffed, and he puffed, and the stick house tumbled down — crash! The two little pigs ran all the way to their sister's house of bricks."
+      "segments": [
+        { "speaker": "narrator", "text": "Soon the wolf arrived at the stick house." },
+        { "speaker": "wolf", "text": "\"Little pigs, little pigs, let me come in!\"" },
+        { "speaker": "pigs", "text": "\"Not by the hairs of our chinny-chin-chins!\"" },
+        { "speaker": "wolf", "text": "\"Then I'll huff, and I'll puff, and I'll blow your house in!\"" },
+        { "speaker": "narrator", "text": "And he huffed, and he puffed, and the stick house tumbled down — crash! The two little pigs ran all the way to their sister's house of bricks." }
+      ]
     },
     {
-      "text": "The wolf stomped up to the brick house. \"Little pigs, little pigs, let me come in!\" \"Not by the hairs of our chinny-chin-chins!\" cried all three pigs together. So the wolf huffed, and he puffed, and he huffed, and he puffed — but the brick house did not move one tiny bit."
+      "segments": [
+        { "speaker": "narrator", "text": "The wolf stomped up to the brick house." },
+        { "speaker": "wolf", "text": "\"Little pigs, little pigs, let me come in!\"" },
+        { "speaker": "pigs", "text": "\"Not by the hairs of our chinny-chin-chins!\"" },
+        { "speaker": "narrator", "text": "cried all three pigs together. So the wolf huffed, and he puffed, and he huffed, and he puffed — but the brick house did not move one tiny bit." }
+      ]
     },
     {
-      "text": "The wolf was not finished. He climbed onto the roof to sneak down the chimney. But the clever third pig heard his footsteps and set a big pot of vegetable soup bubbling in the fireplace. When the wolf slid down, he landed right in the hot soup — YOWCH! He shot straight back up the chimney and ran into the woods, and he never bothered the three little pigs again."
+      "segments": [
+        { "speaker": "narrator", "text": "The wolf was not finished. He climbed onto the roof to sneak down the chimney. But the clever third pig heard his footsteps and set a big pot of vegetable soup bubbling in the fireplace. When the wolf slid down, he landed right in the hot soup — YOWCH! He shot straight back up the chimney and ran into the woods, and he never bothered the three little pigs again." }
+      ]
     },
     {
-      "text": "After that, the two brothers helped their sister lay bricks, and before winter came, all three pigs had strong brick houses side by side. And every Sunday they ate soup together — vegetable soup, of course — happily ever after."
+      "segments": [
+        { "speaker": "narrator", "text": "After that, the two brothers helped their sister lay bricks, and before winter came, all three pigs had strong brick houses side by side. And every Sunday they ate soup together — vegetable soup, of course — happily ever after." }
+      ]
     }
   ]
 }

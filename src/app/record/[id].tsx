@@ -6,27 +6,54 @@ import {
   useAudioRecorder,
 } from 'expo-audio';
 import { Stack, useLocalSearchParams } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { Fonts, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
-import { deletePageRecording, getStoryNarration, savePageRecording } from '@/lib/narration';
+import { characterColor, getCharacter } from '@/lib/cast';
+import {
+  deleteSegmentRecording,
+  getStoryNarration,
+  saveSegmentRecording,
+} from '@/lib/narration';
 import { useProfiles } from '@/lib/profiles';
 import { getStory } from '@/lib/stories';
 
+interface ScriptLine {
+  pageIndex: number;
+  segIndex: number;
+  speaker: string;
+  text: string;
+}
+
 export default function RecordScreen() {
   const colors = useTheme();
-  const { id, page } = useLocalSearchParams<{ id: string; page?: string }>();
+  const { id, page, seg } = useLocalSearchParams<{ id: string; page?: string; seg?: string }>();
   const { activeProfile } = useProfiles();
   const story = getStory(id);
 
-  const [pageIndex, setPageIndex] = useState(() => {
-    const initial = Number(page);
-    return Number.isInteger(initial) && initial >= 0 ? initial : 0;
+  // The story flattened into a script: one line per segment, in reading order.
+  const script = useMemo<ScriptLine[]>(
+    () =>
+      story
+        ? story.pages.flatMap((p, pageIndex) =>
+            p.segments.map((s, segIndex) => ({ pageIndex, segIndex, ...s }))
+          )
+        : [],
+    [story]
+  );
+
+  const [lineIndex, setLineIndex] = useState(() => {
+    const targetPage = Number(page);
+    const targetSeg = Number(seg);
+    const found = script.findIndex(
+      (l) => l.pageIndex === targetPage && l.segIndex === (Number.isInteger(targetSeg) ? targetSeg : 0)
+    );
+    return found >= 0 ? found : 0;
   });
   const [permissionGranted, setPermissionGranted] = useState<boolean | null>(null);
-  const [recordedUris, setRecordedUris] = useState<(string | null)[]>([]);
+  const [recordedUris, setRecordedUris] = useState<(string | null)[][]>([]);
   const [isRecording, setIsRecording] = useState(false);
   const [busy, setBusy] = useState(false);
 
@@ -41,7 +68,9 @@ export default function RecordScreen() {
 
   useEffect(() => {
     if (story && activeProfile) {
-      setRecordedUris(getStoryNarration(activeProfile.id, story).map((n) => n.uri));
+      setRecordedUris(
+        getStoryNarration(activeProfile.id, story).map((pageRow) => pageRow.map((n) => n.uri))
+      );
     }
   }, [story, activeProfile]);
 
@@ -64,9 +93,13 @@ export default function RecordScreen() {
     );
   }
 
-  const totalPages = story.pages.length;
-  const recordedCount = recordedUris.filter(Boolean).length;
-  const currentUri = recordedUris[pageIndex] ?? null;
+  const line = script[lineIndex];
+  const character = line.speaker === 'narrator' ? null : getCharacter(story, line.speaker);
+  const speakerColor =
+    line.speaker === 'narrator' ? colors.textSecondary : characterColor(story, line.speaker);
+  const totalLines = script.length;
+  const recordedCount = recordedUris.flat().filter(Boolean).length;
+  const currentUri = recordedUris[line.pageIndex]?.[line.segIndex] ?? null;
 
   const startRecording = async () => {
     if (busy) return;
@@ -92,10 +125,16 @@ export default function RecordScreen() {
       setIsRecording(false);
       await setAudioModeAsync({ allowsRecording: false, playsInSilentMode: true });
       if (recorder.uri) {
-        const savedUri = await savePageRecording(activeProfile.id, story.id, pageIndex, recorder.uri);
-        setRecordedUris((uris) => {
-          const next = [...uris];
-          next[pageIndex] = savedUri;
+        const savedUri = await saveSegmentRecording(
+          activeProfile.id,
+          story.id,
+          line.pageIndex,
+          line.segIndex,
+          recorder.uri
+        );
+        setRecordedUris((rows) => {
+          const next = rows.map((row) => [...row]);
+          next[line.pageIndex][line.segIndex] = savedUri;
           return next;
         });
       }
@@ -108,24 +147,23 @@ export default function RecordScreen() {
 
   const playPreview = () => {
     if (!currentUri) return;
-    // Cache-bust: re-recordings reuse the same file path.
     previewPlayer.replace({ uri: currentUri });
     previewPlayer.seekTo(0);
     previewPlayer.play();
   };
 
   const discardRecording = () => {
-    Alert.alert('Re-record this page?', 'The current take will be deleted.', [
+    Alert.alert('Re-record this line?', 'The current take will be deleted.', [
       { text: 'Cancel', style: 'cancel' },
       {
         text: 'Delete take',
         style: 'destructive',
         onPress: () => {
           previewPlayer.pause();
-          deletePageRecording(activeProfile.id, story.id, pageIndex);
-          setRecordedUris((uris) => {
-            const next = [...uris];
-            next[pageIndex] = null;
+          deleteSegmentRecording(activeProfile.id, story.id, line.pageIndex, line.segIndex);
+          setRecordedUris((rows) => {
+            const next = rows.map((row) => [...row]);
+            next[line.pageIndex][line.segIndex] = null;
             return next;
           });
         },
@@ -133,10 +171,10 @@ export default function RecordScreen() {
     ]);
   };
 
-  const goToPage = (index: number) => {
+  const goToLine = (index: number) => {
     if (isRecording) return;
     previewPlayer.pause();
-    setPageIndex(index);
+    setLineIndex(index);
   };
 
   return (
@@ -144,36 +182,50 @@ export default function RecordScreen() {
       <Stack.Screen options={{ title: `Record · ${story.title}` }} />
 
       <Text style={[styles.progressText, { color: colors.textSecondary }]}>
-        {activeProfile.emoji} {activeProfile.name} · {recordedCount} of {totalPages} pages recorded
+        {activeProfile.emoji} {activeProfile.name} · {recordedCount} of {totalLines} lines recorded
       </Text>
 
-      <View style={styles.dots}>
-        {story.pages.map((_, index) => (
-          <Pressable key={index} onPress={() => goToPage(index)} hitSlop={6}>
-            <View
-              style={[
-                styles.dot,
-                {
-                  backgroundColor: recordedUris[index]
-                    ? colors.recorded
-                    : colors.backgroundSelected,
-                  borderWidth: index === pageIndex ? 2 : 0,
-                  borderColor: colors.accent,
-                },
-              ]}
-            />
-          </Pressable>
-        ))}
+      <View style={[styles.progressTrack, { backgroundColor: colors.backgroundSelected }]}>
+        <View
+          style={[
+            styles.progressFill,
+            { backgroundColor: colors.recorded, width: `${(recordedCount / totalLines) * 100}%` },
+          ]}
+        />
+      </View>
+
+      <View style={[styles.speakerChip, { backgroundColor: colors.backgroundElement }]}>
+        {character ? (
+          <>
+            <Text style={styles.speakerEmoji}>{character.emoji}</Text>
+            <View style={styles.speakerLabels}>
+              <Text style={[styles.speakerName, { color: speakerColor }]}>{character.name}</Text>
+              <Text style={[styles.speakerHint, { color: colors.textSecondary }]}>
+                🎭 Perform it in {character.voiceHint}!
+              </Text>
+            </View>
+          </>
+        ) : (
+          <>
+            <Text style={styles.speakerEmoji}>📖</Text>
+            <View style={styles.speakerLabels}>
+              <Text style={[styles.speakerName, { color: colors.text }]}>Narrator</Text>
+              <Text style={[styles.speakerHint, { color: colors.textSecondary }]}>
+                Your own storytelling voice
+              </Text>
+            </View>
+          </>
+        )}
       </View>
 
       <ScrollView
         style={[styles.teleprompter, { backgroundColor: colors.backgroundElement }]}
         contentContainerStyle={styles.teleprompterContent}>
         <Text style={[styles.pageLabel, { color: colors.textSecondary }]}>
-          Page {pageIndex + 1} of {totalPages} — read this aloud:
+          Page {line.pageIndex + 1} · Line {lineIndex + 1} of {totalLines} — read this aloud:
         </Text>
-        <Text style={[styles.pageText, { color: colors.text }]}>
-          {story.pages[pageIndex].text}
+        <Text style={[styles.lineText, { color: character ? speakerColor : colors.text }]}>
+          {line.text}
         </Text>
       </ScrollView>
 
@@ -222,21 +274,21 @@ export default function RecordScreen() {
         {isRecording
           ? 'Recording… tap to stop'
           : currentUri
-            ? 'This page is saved ❤️'
+            ? 'This line is saved ❤️'
             : 'Tap to start recording'}
       </Text>
 
       <View style={styles.pageNav}>
         <Pressable
-          disabled={pageIndex === 0 || isRecording}
-          onPress={() => goToPage(pageIndex - 1)}
-          style={{ opacity: pageIndex === 0 || isRecording ? 0.3 : 1 }}>
+          disabled={lineIndex === 0 || isRecording}
+          onPress={() => goToLine(lineIndex - 1)}
+          style={{ opacity: lineIndex === 0 || isRecording ? 0.3 : 1 }}>
           <Text style={[styles.pageNavText, { color: colors.text }]}>‹ Previous</Text>
         </Pressable>
         <Pressable
-          disabled={pageIndex >= totalPages - 1 || isRecording}
-          onPress={() => goToPage(pageIndex + 1)}
-          style={{ opacity: pageIndex >= totalPages - 1 || isRecording ? 0.3 : 1 }}>
+          disabled={lineIndex >= totalLines - 1 || isRecording}
+          onPress={() => goToLine(lineIndex + 1)}
+          style={{ opacity: lineIndex >= totalLines - 1 || isRecording ? 0.3 : 1 }}>
           <Text style={[styles.pageNavText, { color: colors.text }]}>Next ›</Text>
         </Pressable>
       </View>
@@ -257,16 +309,38 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
   },
-  dots: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    gap: Spacing.two,
-    marginVertical: Spacing.three,
+  progressTrack: {
+    height: 6,
+    borderRadius: 3,
+    marginTop: Spacing.two,
+    marginBottom: Spacing.three,
+    overflow: 'hidden',
   },
-  dot: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
+  progressFill: {
+    height: '100%',
+    borderRadius: 3,
+  },
+  speakerChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.two + 2,
+    borderRadius: 16,
+    paddingVertical: Spacing.two,
+    paddingHorizontal: Spacing.three,
+    marginBottom: Spacing.two,
+  },
+  speakerEmoji: {
+    fontSize: 26,
+  },
+  speakerLabels: {
+    flex: 1,
+  },
+  speakerName: {
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  speakerHint: {
+    fontSize: 13,
   },
   teleprompter: {
     flex: 1,
@@ -282,9 +356,9 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
-  pageText: {
-    fontSize: 24,
-    lineHeight: 38,
+  lineText: {
+    fontSize: 26,
+    lineHeight: 40,
     fontFamily: Fonts?.serif,
   },
   helperText: {

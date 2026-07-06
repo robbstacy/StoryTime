@@ -22,6 +22,7 @@ export default function RootLayout() {
           <Stack.Screen name="index" options={{ title: 'StoryTime' }} />
           <Stack.Screen name="story/[id]" options={{ title: '' }} />
           <Stack.Screen name="record/[id]" options={{ title: 'Record' }} />
+          <Stack.Screen name="cast" options={{ title: 'Voice Cast' }} />
           <Stack.Screen name="profiles" options={{ title: 'Voices', presentation: 'modal' }} />
         </Stack>
       </ThemeProvider>

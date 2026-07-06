@@ -27,6 +27,15 @@ Rules that follow from this:
 - Sources are honestly labeled — parents should always know which is which.
 - Stories can blend sources: if a parent recorded pages 1–8 and stopped, the clone finishes pages 9–12. A half-finished recording is never wasted effort.
 
+## Character voices & the cast
+
+Parents don't read in one voice — they growl the Wolf, squeak the pigs, and soften for Mama Rabbit. StoryTime treats that as structured data:
+
+- **Stories are segmented by speaker.** Every page is a sequence of segments attributed to the narrator or a named character (with a performance hint like "a big, gruff, growly voice"). The teleprompter records line-by-line, cueing the parent on who's speaking.
+- **Every character line is a labeled voice sample.** A recorded segment carries (audio, exact text, character, performer) — precisely the training pairs a voice model needs. No separate "calibration" recording session is ever required; performing the story *is* collecting the samples.
+- **The Voice Cast screen** shows each character a profile has performed, its sample coverage (lines and word counts), and which roles are still waiting to be performed.
+- **Future (v2): character voice models.** Once a character voice has enough samples, it can be modeled just like the narrator voice. New stories then get a *casting* step: story roles are matched to the profile's cast (by archetype — gruff villain, tiny animal, wise elder), so "Papa's Wolf" can play any future big bad wolf. Same consent rules as narrator cloning: the voice's owner opts in, sources are labeled (✨), and models are deletable.
+
 ## Product principles
 
 1. **The recording UX is the product.** The biggest risk is parents not finishing recordings. Short stories first, per-page re-records, visible progress, encouragement.

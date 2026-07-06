@@ -14,10 +14,11 @@ Real recordings and cloned audio share the same playback pipeline, so recording 
 
 ## Current features (v1 scaffold)
 
-- 📚 **Story library** — curated public domain stories (Aesop, the Brothers' classics, Beatrix Potter), stored as structured JSON pages.
-- 🎙 **Guided recording** — a teleprompter shows one page at a time; record, listen back, and redo individual pages without re-reading the whole story.
-- ▶️ **Story player** — big friendly pages with auto-advancing narration, page dots, and source labels ("❤️ Read by Mom").
-- 👨‍👩‍👧 **Voice profiles** — any loved one can record; each profile keeps its own set of recordings.
+- 📚 **Story library** — curated public domain stories (Aesop, the Brothers' classics, Beatrix Potter), stored as structured JSON pages segmented by speaker (narrator vs. characters).
+- 🎙 **Guided recording** — a line-by-line teleprompter cues who's speaking and how ("🐺 The Big Bad Wolf — perform it in a big, gruff, growly voice!"); record, listen back, and redo individual lines.
+- 🎭 **Voice cast** — every character line a parent performs is saved with its exact text, building labeled voice samples per character. The Cast screen tracks each performed character, ready for future voice modeling so "Papa's Wolf" can be cast in new stories.
+- ▶️ **Story player** — big friendly pages with segment-by-segment narration, character-colored dialogue, page dots, and source labels ("❤️ Read by Mom").
+- 👨‍👩‍👧 **Voice profiles** — any loved one can record; each profile keeps its own recordings and its own cast of characters.
 - 📱 **Local-first** — all audio stays on the device. Cloud sync and remote sharing are planned, cloning is opt-in-by-design.
 
 ## Getting started (Android Studio)
