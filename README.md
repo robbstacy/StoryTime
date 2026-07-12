@@ -14,7 +14,7 @@ Every recorded character line is a labeled (audio + exact text + character) samp
 
 ## Features
 
-- 📚 **Story library** — 9 public domain stories (Beatrix Potter, Aesop, Grimm, Andersen, Mark Twain) with 37 performable character roles, bundled as structured JSON.
+- 📚 **Story library** — 17 public domain stories (Beatrix Potter, Aesop, Grimm, Andersen, Mark Twain, and Philippine folk tales including Visayan) with 61 performable character roles, bundled as structured JSON.
 - 🎙 **Guided recording** — a line-by-line teleprompter cues who's speaking and how ("🐺 The Big Bad Wolf — perform it in a big, gruff, growly voice!"); record, listen back, and redo individual lines.
 - 🎭 **Voice cast** — tracks every character a profile has performed and its sample coverage, ready for future voice modeling so "Papa's Wolf" can be cast in new stories.
 - ▶️ **Story player** — segment-by-segment narration stitched seamlessly, character-colored dialogue, auto page turns.

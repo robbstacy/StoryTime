@@ -1,0 +1,51 @@
+{
+  "id": "why-the-sky-is-high",
+  "title": "Why the Sky Is High",
+  "author": "Philippine folk tale",
+  "year": 1916,
+  "source": "Public domain. Retold in English from the Philippine legend.",
+  "coverEmoji": "🌌",
+  "coverColor": "#4A5FA5",
+  "minutes": 3,
+  "characters": [
+    { "id": "lola", "name": "The Old Grandmother", "emoji": "👵", "voiceHint": "a tired but determined old voice" },
+    { "id": "sky", "name": "The Sky", "emoji": "☁️", "voiceHint": "a soft, booming, faraway voice" }
+  ],
+  "pages": [
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "Long, long ago, in the islands of the Philippines, the sky did not live way up high where it lives today. It hung low over the world — so low that if you stood on tiptoe, you could touch the clouds, and the tallest bamboo bent over sideways beneath it." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "In those days there lived an old grandmother who pounded rice every morning to feed her family. She put the rice grains in a big wooden mortar and pounded them with a long, heavy pestle — thump, thump, thump — to knock away the husks." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "But the sky hung so low that she could not raise her pestle properly. Every time she lifted it — BONK! — it knocked against the clouds." },
+        { "speaker": "lola", "text": "\"Oh, this troublesome sky! How is anyone to pound rice with the heavens bumping their elbows?\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "Thump — BONK! Thump — BONK! All morning the pestle knocked the poor sky, until at last the sky itself spoke up in a soft, faraway rumble," },
+        { "speaker": "sky", "text": "\"Old mother, your pestle is bruising my clouds!\"" },
+        { "speaker": "lola", "text": "\"And your clouds are spoiling my rice! If you please, kind sky — move up! Move up higher, where my pestle cannot reach you!\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "The sky sighed a great windy sigh — whoooosh. And then, slowly, gently, it began to rise. Up past the bamboo. Up past the coconut palms. Up past the mountaintops, higher and higher, until it settled far, far above the world, where it lives to this very day." },
+        { "speaker": "sky", "text": "\"Is this high enough, old mother?\"" },
+        { "speaker": "lola", "text": "\"Just right! Maraming salamat — thank you very much!\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "And that, the old folks say, is why the sky is high — pushed up long ago by a grandmother who just wanted to pound her rice in peace. So tonight, when you look up at the faraway stars, remember: once upon a time, the sky was close enough to touch." }
+      ]
+    }
+  ]
+}

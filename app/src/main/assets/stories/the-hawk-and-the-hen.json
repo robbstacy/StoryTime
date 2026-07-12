@@ -1,0 +1,59 @@
+{
+  "id": "the-hawk-and-the-hen",
+  "title": "The Hawk and the Hen",
+  "author": "Visayan folk tale",
+  "year": 1916,
+  "source": "Public domain. Retold in English from the Visayan folk tale collected in Mabel Cook Cole's Philippine Folk Tales.",
+  "coverEmoji": "🦅",
+  "coverColor": "#8C6A4F",
+  "minutes": 4,
+  "characters": [
+    { "id": "hawk", "name": "The Hawk", "emoji": "🦅", "voiceHint": "a proud, swooping, dramatic voice" },
+    { "id": "hen", "name": "The Hen", "emoji": "🐔", "voiceHint": "a flustered, clucking voice" },
+    { "id": "rooster", "name": "The Rooster", "emoji": "🐓", "voiceHint": "a loud, strutting voice" }
+  ],
+  "pages": [
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "Long ago in the Visayan islands, a grand hawk flew down from the mountains to see the world. In a farmyard by the sea, he spied a beautiful young hen scratching in the sun, and he circled down to meet her." },
+        { "speaker": "hawk", "text": "\"Good day, lovely hen! I am the hawk of the high mountains. Will you promise to marry me?\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "The hen was so flattered that a fine mountain hawk would ask her that she clucked out a promise without thinking twice." },
+        { "speaker": "hen", "text": "\"Oh! Well — yes, yes, I promise!\"" },
+        { "speaker": "narrator", "text": "The hawk was delighted. He gave her a shining ring to wear on her wing and flew home to the mountains to prepare the wedding feast." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "But the hen had quite forgotten one thing: she had already promised to marry the rooster of her own farmyard! When the rooster saw the ring on her wing, he ruffled up all his feathers." },
+        { "speaker": "rooster", "text": "\"COCK-A-DOODLE-WHAT?! A ring? From a HAWK? You gave your promise to ME first, long ago!\"" },
+        { "speaker": "hen", "text": "\"Oh dear, oh dear! You are right! What a forgetful hen I am!\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "The hen was so ashamed that she threw the hawk's ring far into the tall grass, so she would not have to look at it. But oh — when the hawk came flying back with wedding gifts, and saw her wing bare —" },
+        { "speaker": "hawk", "text": "\"Where is my ring? You have thrown away my ring AND your promise! A promise, little hen, is not a thing to scratch into the dirt!\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "The hen hung her head and searched the grass, but the ring was gone. The hawk circled overhead and called down his judgment," },
+        { "speaker": "hawk", "text": "\"Until you find my ring, you shall scratch the ground and search — you and all your children after you. And whenever I remember my lost ring, I shall swoop down to your farmyard and take a fat young chicken as payment!\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "And so it is to this very day. That is why hens and their chicks are forever scratch-scratch-scratching at the ground — still searching for the hawk's lost ring. And that is why, when the shadow of a hawk crosses the farmyard, the mother hen cries out and gathers her chicks beneath her wings." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "The wise old folks of the Visayas tell this story to remind their little ones: do not make a promise you cannot keep — and if you make one, guard it well, for a promise is the most precious ring of all." }
+      ]
+    }
+  ]
+}

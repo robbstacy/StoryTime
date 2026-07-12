@@ -1,0 +1,83 @@
+{
+  "id": "the-little-red-hen",
+  "title": "The Little Red Hen",
+  "author": "Traditional",
+  "year": 1874,
+  "source": "Public domain. Retold from the traditional tale.",
+  "coverEmoji": "🐔",
+  "coverColor": "#C96A50",
+  "minutes": 4,
+  "characters": [
+    { "id": "hen", "name": "The Little Red Hen", "emoji": "🐔", "voiceHint": "a busy, cheerful clucking voice" },
+    { "id": "dog", "name": "The Dog", "emoji": "🐕", "voiceHint": "a lazy, yawning voice" },
+    { "id": "cat", "name": "The Cat", "emoji": "🐈", "voiceHint": "a sleepy, purring voice" },
+    { "id": "duck", "name": "The Duck", "emoji": "🦆", "voiceHint": "a quacky, fussy voice" }
+  ],
+  "pages": [
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "Once upon a time, a little red hen lived in a farmyard with a dog, a cat, and a duck. One morning, scratching in the dirt, she found some grains of wheat." },
+        { "speaker": "hen", "text": "\"Who will help me plant this wheat?\"" },
+        { "speaker": "dog", "text": "\"Not I,\"" },
+        { "speaker": "narrator", "text": "yawned the dog." },
+        { "speaker": "cat", "text": "\"Not I,\"" },
+        { "speaker": "narrator", "text": "purred the cat." },
+        { "speaker": "duck", "text": "\"Not I,\"" },
+        { "speaker": "narrator", "text": "quacked the duck." },
+        { "speaker": "hen", "text": "\"Then I will do it myself.\"" },
+        { "speaker": "narrator", "text": "And she did." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "All summer the wheat grew tall and golden. At last it was ready." },
+        { "speaker": "hen", "text": "\"Who will help me cut the wheat?\"" },
+        { "speaker": "dog", "text": "\"Not I,\"" },
+        { "speaker": "cat", "text": "\"Not I,\"" },
+        { "speaker": "duck", "text": "\"Not I,\"" },
+        { "speaker": "hen", "text": "\"Then I will do it myself.\"" },
+        { "speaker": "narrator", "text": "And she did." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "hen", "text": "\"Who will help me carry the wheat to the mill to be ground into flour?\"" },
+        { "speaker": "dog", "text": "\"Not I,\"" },
+        { "speaker": "cat", "text": "\"Not I,\"" },
+        { "speaker": "duck", "text": "\"Not I,\"" },
+        { "speaker": "hen", "text": "\"Then I will do it myself.\"" },
+        { "speaker": "narrator", "text": "And she did — all the way to the mill and back, with the sack of flour on her back." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "hen", "text": "\"Who will help me bake the bread?\"" },
+        { "speaker": "dog", "text": "\"Not I,\"" },
+        { "speaker": "cat", "text": "\"Not I,\"" },
+        { "speaker": "duck", "text": "\"Not I,\"" },
+        { "speaker": "hen", "text": "\"Then I will do it myself.\"" },
+        { "speaker": "narrator", "text": "And she did. Soon the whole farmyard smelled of warm, fresh bread." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "The little red hen set the beautiful golden loaf on the windowsill to cool. Up trotted the dog, the cat, and the duck, sniffing the air." },
+        { "speaker": "hen", "text": "\"And who will help me EAT the bread?\"" },
+        { "speaker": "dog", "text": "\"I will!\"" },
+        { "speaker": "cat", "text": "\"I will!\"" },
+        { "speaker": "duck", "text": "\"I will!\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "hen", "text": "\"Oh no, you won't! I planted the wheat, I cut it, I carried it to the mill, and I baked the bread — all by myself. Now my chicks and I shall eat it — all by ourselves!\"" },
+        { "speaker": "narrator", "text": "And that is just what they did, down to the very last delicious crumb." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "The dog, the cat, and the duck watched with rumbling bellies, and they felt very sorry indeed. And the next time the little red hen found some grains of wheat and asked, \"Who will help me?\" — all three of them shouted, \"I WILL!\" And from that day on, everyone in the farmyard helped with the work, and everyone shared the warm, fresh bread." }
+      ]
+    }
+  ]
+}

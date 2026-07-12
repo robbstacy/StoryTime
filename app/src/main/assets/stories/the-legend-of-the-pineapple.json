@@ -1,0 +1,58 @@
+{
+  "id": "the-legend-of-the-pineapple",
+  "title": "The Legend of the Pineapple",
+  "author": "Philippine folk tale",
+  "year": 1921,
+  "source": "Public domain. Retold in English from the Philippine legend (Alamat ng Pinya), with a gentler ending.",
+  "coverEmoji": "🍍",
+  "coverColor": "#E3B341",
+  "minutes": 4,
+  "characters": [
+    { "id": "pina", "name": "Pina", "emoji": "👧", "voiceHint": "a whiny, playful little voice" },
+    { "id": "nanay", "name": "Nanay (Mother)", "emoji": "👩", "voiceHint": "a patient, loving mother's voice" }
+  ],
+  "pages": [
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "Long ago, in a little bamboo house in the Philippines, there lived a mother and her daughter, Pina. Pina's mother loved her dearly, but oh, that child could never find anything! Whenever she was asked to fetch something, she would barely look, and then call out —" },
+        { "speaker": "pina", "text": "\"Nanay, I can't find it! It isn't here!\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "nanay", "text": "\"Pina, anak, please bring me the wooden spoon.\"" },
+        { "speaker": "pina", "text": "\"I looked, Nanay! There is no spoon!\"" },
+        { "speaker": "narrator", "text": "But the spoon was right on the table, in front of her nose. Her mother would smile, and sigh, and fetch it herself." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "One day, Pina's mother fell ill and had to stay in bed. She called softly to her daughter," },
+        { "speaker": "nanay", "text": "\"Pina, please cook me a little rice porridge. You will need the pot, the ladle, and some sugar.\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "Pina stomped to the kitchen. She glanced left. She glanced right. She did not open the cupboard, and she did not look behind the water jar." },
+        { "speaker": "pina", "text": "\"Nanay! I can't find the ladle! I can't find the pot! I can't find ANYTHING!\"" },
+        { "speaker": "narrator", "text": "And the tired mother sighed the biggest sigh of her life." },
+        { "speaker": "nanay", "text": "\"Ay, Pina! I wish you had a thousand eyes — then perhaps you could finally find what you are looking for!\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "The house went strangely quiet. When the mother felt better and rose from her bed, Pina was nowhere to be found. She searched the house, the yard, the whole village — calling and calling. And in the garden, where Pina liked to play, there grew a strange new plant she had never seen before: a golden fruit, covered all over with a thousand little eyes." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "The mother cared for the plant every day, and when the golden fruit ripened, it was the sweetest thing anyone had ever tasted. She named it Pina, after her daughter — and to this day, Filipinos call the pineapple \"pinya.\" Some say the kind spirits later returned Pina to her mother, wiser and quicker to help, once she had learned her lesson." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "And that is why, when children say \"I can't find it!\" without really looking, their mothers and fathers still answer: \"Use your eyes, anak — or would you like a thousand of them, like the pineapple?\" So look twice before you say a thing is lost. It is usually right in front of your nose." }
+      ]
+    }
+  ]
+}

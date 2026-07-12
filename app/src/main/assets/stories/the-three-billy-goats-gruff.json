@@ -1,0 +1,72 @@
+{
+  "id": "the-three-billy-goats-gruff",
+  "title": "The Three Billy Goats Gruff",
+  "author": "Traditional (Norwegian)",
+  "year": 1845,
+  "source": "Public domain. Retold from the Norwegian tale collected by Asbjørnsen and Moe.",
+  "coverEmoji": "🐐",
+  "coverColor": "#9AA98F",
+  "minutes": 4,
+  "characters": [
+    { "id": "little-goat", "name": "Little Billy Goat", "emoji": "🐐", "voiceHint": "a tiny, trip-trapping voice" },
+    { "id": "middle-goat", "name": "Middle Billy Goat", "emoji": "🐐", "voiceHint": "a middle-sized, steady voice" },
+    { "id": "big-goat", "name": "Big Billy Goat", "emoji": "🐐", "voiceHint": "a great big bold voice" },
+    { "id": "troll", "name": "The Troll", "emoji": "👹", "voiceHint": "a rumbly, grumbly troll voice" }
+  ],
+  "pages": [
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "Once upon a time there were three billy goats named Gruff — a little one, a middle-sized one, and a great big one. On the far side of the river was a hillside of sweet green grass, but to reach it they had to cross a bridge. And under that bridge lived a grumpy old troll." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "First came the little billy goat. Trip-trap, trip-trap, went the bridge." },
+        { "speaker": "troll", "text": "\"WHO'S THAT trip-trapping over MY bridge?\"" },
+        { "speaker": "little-goat", "text": "\"It is only I, the littlest Billy Goat Gruff, going up the hillside to eat the sweet green grass.\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "troll", "text": "\"Then I'm coming up to GOBBLE YOU UP!\"" },
+        { "speaker": "little-goat", "text": "\"Oh no, please don't take me! I'm far too little. Wait for my brother — he's much bigger than I am.\"" },
+        { "speaker": "troll", "text": "\"Hmph. Very well. Be off with you!\"" },
+        { "speaker": "narrator", "text": "And the little goat trip-trapped safely across." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "Next came the middle-sized billy goat. TRIP-TRAP, TRIP-TRAP, went the bridge, a little louder." },
+        { "speaker": "troll", "text": "\"WHO'S THAT trip-trapping over MY bridge?\"" },
+        { "speaker": "middle-goat", "text": "\"It is I, the middle Billy Goat Gruff, going up the hillside to eat the sweet green grass.\"" },
+        { "speaker": "troll", "text": "\"Then I'm coming up to GOBBLE YOU UP!\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "middle-goat", "text": "\"Oh, don't bother with me! Wait for my big brother. He is the biggest billy goat you ever did see.\"" },
+        { "speaker": "troll", "text": "\"Hmph! Very well. Be off with you!\"" },
+        { "speaker": "narrator", "text": "And the middle goat trip-trapped safely across." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "Last of all came the great big billy goat. TRIP-TRAP! TRIP-TRAP! The bridge creaked and groaned beneath him." },
+        { "speaker": "troll", "text": "\"WHO'S THAT tramping over MY bridge?!\"" },
+        { "speaker": "big-goat", "text": "\"IT IS I! THE BIG BILLY GOAT GRUFF!\"" },
+        { "speaker": "troll", "text": "\"Then I'm coming up to GOBBLE YOU UP!\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "big-goat", "text": "\"Well, come along! I have two big horns and four hard hooves, and we shall see about that!\"" },
+        { "speaker": "narrator", "text": "Up climbed the troll — and the big billy goat lowered his horns and BUTTED him clean off the bridge. SPLASH! The troll flew into the river and floated away downstream, grumbling all the way, and he never bothered anyone's bridge again." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "Then the big billy goat trotted up the hillside to join his brothers, and the three of them ate the sweet green grass until they were so fat they could hardly walk home. And if the grass hasn't run out, they are eating there still. Snip, snap, snout — this tale's told out!" }
+      ]
+    }
+  ]
+}

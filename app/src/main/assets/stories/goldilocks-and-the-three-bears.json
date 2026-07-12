@@ -1,0 +1,79 @@
+{
+  "id": "goldilocks-and-the-three-bears",
+  "title": "Goldilocks and the Three Bears",
+  "author": "Traditional",
+  "year": 1837,
+  "source": "Public domain. Retold from the traditional English tale.",
+  "coverEmoji": "🐻",
+  "coverColor": "#A9746E",
+  "minutes": 5,
+  "characters": [
+    { "id": "goldilocks", "name": "Goldilocks", "emoji": "👧", "voiceHint": "a curious, sing-song little voice" },
+    { "id": "papa-bear", "name": "Papa Bear", "emoji": "🐻", "voiceHint": "a great big deep voice" },
+    { "id": "mama-bear", "name": "Mama Bear", "emoji": "🐻‍❄️", "voiceHint": "a middle-sized gentle voice" },
+    { "id": "baby-bear", "name": "Baby Bear", "emoji": "🧸", "voiceHint": "a wee little squeaky voice" }
+  ],
+  "pages": [
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "Once upon a time there were three bears who lived in a cozy house in the woods: great big Papa Bear, middle-sized Mama Bear, and wee little Baby Bear. One morning, Mama Bear cooked porridge for breakfast, but it was too hot to eat." },
+        { "speaker": "mama-bear", "text": "\"Let us walk in the woods while it cools,\"" },
+        { "speaker": "narrator", "text": "she said. And off they went." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "Just then, a little girl called Goldilocks came wandering by. She peeped in at the window, and then at the keyhole, and when she saw nobody was home, she opened the door and walked right in. On the table sat three bowls of porridge." },
+        { "speaker": "goldilocks", "text": "\"Oh, I am SO hungry!\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "First she tasted the porridge in the great big bowl." },
+        { "speaker": "goldilocks", "text": "\"Ouch! Too hot!\"" },
+        { "speaker": "narrator", "text": "Then she tasted the porridge in the middle-sized bowl." },
+        { "speaker": "goldilocks", "text": "\"Brrr! Too cold!\"" },
+        { "speaker": "narrator", "text": "Then she tasted the porridge in the wee little bowl, and it was just right — so she ate it all up." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "Feeling full, Goldilocks went to sit down. The great big chair was too hard. The middle-sized chair was too soft. But the wee little chair was just right — until CRACK! It broke all to pieces beneath her." },
+        { "speaker": "goldilocks", "text": "\"Oh dear, oh dear!\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "Upstairs she found three beds. The great big bed was too high at the head. The middle-sized bed was too high at the foot. But the wee little bed was just right, and Goldilocks curled up and fell fast asleep." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "Soon the three bears came home for their breakfast." },
+        { "speaker": "papa-bear", "text": "\"SOMEBODY HAS BEEN EATING MY PORRIDGE!\"" },
+        { "speaker": "mama-bear", "text": "\"Somebody has been eating my porridge!\"" },
+        { "speaker": "baby-bear", "text": "\"Somebody has been eating my porridge — and they ate it ALL up!\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "papa-bear", "text": "\"SOMEBODY HAS BEEN SITTING IN MY CHAIR!\"" },
+        { "speaker": "mama-bear", "text": "\"Somebody has been sitting in my chair!\"" },
+        { "speaker": "baby-bear", "text": "\"Somebody has been sitting in my chair — and they broke it all to pieces!\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "Up the stairs they crept." },
+        { "speaker": "papa-bear", "text": "\"SOMEBODY HAS BEEN LYING IN MY BED!\"" },
+        { "speaker": "mama-bear", "text": "\"Somebody has been lying in my bed!\"" },
+        { "speaker": "baby-bear", "text": "\"Somebody has been lying in my bed — and here she is!\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "At the sound of Baby Bear's wee little voice, Goldilocks woke with a start. She saw the three bears, tumbled out of bed, ran down the stairs and out the door, and never stopped running until she was home. And she never, ever wandered into a stranger's house again — though the three bears did fix the wee little chair, just in case a politer visitor ever came to call." }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "id": "the-gingerbread-man",
+  "title": "The Gingerbread Man",
+  "author": "Traditional",
+  "year": 1875,
+  "source": "Public domain. Retold from the traditional tale, with a gentler ending.",
+  "coverEmoji": "🍪",
+  "coverColor": "#B5804A",
+  "minutes": 4,
+  "characters": [
+    { "id": "gingerbread", "name": "The Gingerbread Man", "emoji": "🍪", "voiceHint": "a quick, cheeky sing-song voice" },
+    { "id": "old-woman", "name": "The Old Woman", "emoji": "👵", "voiceHint": "a warm, surprised grandma voice" },
+    { "id": "fox", "name": "The Fox", "emoji": "🦊", "voiceHint": "a smooth, sly voice" }
+  ],
+  "pages": [
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "Once upon a time, a little old woman baked a gingerbread man. She gave him raisin eyes, a sugary smile, and three fine buttons of icing. But the moment she opened the oven — up he jumped, and out the door he ran!" },
+        { "speaker": "old-woman", "text": "\"Stop! Stop, little gingerbread man!\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "But the gingerbread man only laughed and called back over his shoulder," },
+        { "speaker": "gingerbread", "text": "\"Run, run, as fast as you can! You can't catch me — I'm the Gingerbread Man!\"" },
+        { "speaker": "narrator", "text": "And she couldn't catch him." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "He ran past the old man in the garden, past the cow in the meadow, and past the horse by the fence. They all chased after him — thump, clop, gallop! — but the gingerbread man was faster than them all." },
+        { "speaker": "gingerbread", "text": "\"I've run from an old woman, an old man, a cow, and a horse! Run, run, as fast as you can — you can't catch me, I'm the Gingerbread Man!\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "At last he came to a wide river, and there he had to stop, for gingerbread men cannot swim. Along came a fox with a long red tail and a very polite smile." },
+        { "speaker": "fox", "text": "\"Good day, little gingerbread man. What a fine runner you are! Might I carry you across the river on my tail?\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "The gingerbread man looked behind him — the old woman, the old man, the cow, and the horse were getting closer! So he hopped onto the fox's tail, and the fox slipped into the water." },
+        { "speaker": "fox", "text": "\"Dear me, the water is getting deep. Climb up on my back, little friend, so you don't get soggy.\"" },
+        { "speaker": "narrator", "text": "The gingerbread man climbed onto the fox's back." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "fox", "text": "\"Deeper still! Quick — hop onto my nose, where it's nice and dry!\"" },
+        { "speaker": "narrator", "text": "And the gingerbread man hopped right onto the fox's nose. But just as the fox opened his mouth for a snap — SPLASH! A big river wave washed over them both, and the slippery wet gingerbread man slid clean off and was flung to the far bank." },
+        { "speaker": "gingerbread", "text": "\"Too slow, Mister Fox! Run, run, as fast as you can!\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "The soggy fox sneezed and slunk away with an empty belly. And the gingerbread man? He ran all the way home to the little old woman — for even a gingerbread man gets tired of running — and he decided her cozy kitchen windowsill was the finest place in the world. She kept him there in a place of honor, sweet smile and all, and told this story to every child who visited. Snip, snap, that's that!" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "id": "the-monkey-and-the-turtle",
+  "title": "The Monkey and the Turtle",
+  "author": "Philippine folk tale",
+  "year": 1916,
+  "source": "Public domain. Retold in English from the classic Philippine folk tale, with a gentler ending.",
+  "coverEmoji": "🐢",
+  "coverColor": "#6FA36B",
+  "minutes": 5,
+  "characters": [
+    { "id": "monkey", "name": "The Monkey", "emoji": "🐒", "voiceHint": "a fast, boastful, chattering voice" },
+    { "id": "turtle", "name": "The Turtle", "emoji": "🐢", "voiceHint": "a slow, patient, clever voice" }
+  ],
+  "pages": [
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "One day, a monkey and a turtle were walking along the river when they found a banana tree floating in the water. They pulled it to the bank together." },
+        { "speaker": "monkey", "text": "\"I found it first! But since you helped, we shall split it. I will take the top half — see how full of leaves it is!\"" },
+        { "speaker": "turtle", "text": "\"Then I will take the bottom half, with the roots.\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "The monkey laughed at the turtle's poor bare half. He planted his leafy top in the ground, and the turtle planted her half with the roots. But leaves without roots soon wither — and roots know how to grow. Before long, the monkey's tree was brown and dry, while the turtle's tree grew tall and heavy with sweet golden bananas." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "turtle", "text": "\"Oh dear. My bananas are ripe, but my legs are too short to climb.\"" },
+        { "speaker": "narrator", "text": "Along came the monkey, licking his lips." },
+        { "speaker": "monkey", "text": "\"Dear friend! I am the finest climber in the forest. I shall pick your bananas for you — you may have every one that falls.\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "Up the trunk he scampered. But instead of dropping the bananas down, the greedy monkey sat in the branches and ate them, one after another after another." },
+        { "speaker": "monkey", "text": "\"Mmm! Sweet! Delicious! Perhaps I shall leave you the peels!\"" },
+        { "speaker": "turtle", "text": "\"Come down! Those are my bananas! I planted, I watered, I waited!\"" },
+        { "speaker": "narrator", "text": "But the monkey only laughed and kept eating." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "So the patient turtle thought of a clever trick. She gathered sharp coconut shells and set them all around the bottom of the tree, points up, like a little fence. Then she hid under a big leaf and called out in a spooky voice," },
+        { "speaker": "turtle", "text": "\"Monkey! Monkey! The hunter is coming with his dogs!\"" }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "The monkey was so frightened that he leapt from the tree without looking — and landed BOTTOM-FIRST right on the coconut shells!" },
+        { "speaker": "monkey", "text": "\"YOWWW! Ouch! Oooh! My poor tail!\"" },
+        { "speaker": "narrator", "text": "He hopped and rubbed and hollered, and to this very day, that is why monkeys have hard, calloused bottoms — or so the old folks say." }
+      ]
+    },
+    {
+      "segments": [
+        { "speaker": "narrator", "text": "The monkey, quite sore and quite ashamed, brought the turtle a whole armful of bananas the next morning to say sorry. The turtle shared them, because that is what she had wanted all along — a friend to share bananas with. And from then on, whenever they found a banana tree, the monkey climbed, the turtle counted, and both of them ate exactly half. But everyone in the forest agreed: the slow little turtle was the cleverest of them all." }
+      ]
+    }
+  ]
+}
